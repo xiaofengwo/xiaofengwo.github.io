@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title><![CDATA[如何利用shadowsocks配置系统代理]]></title>
+    <url>%2F2018%2F02%2F06%2Finstruction-to-use-shadowsocks-for-system-proxy%2F</url>
+    <content type="text"><![CDATA[1. 配置AWS服务器如果没有搭建远端shadowsocks服务器的需求，可以跳过这一步。 （待补充） 申请AWS账号 配置远端ShadowSocks服务器 2. 配置本地ShadowSocks客户端 下载ShadowSocks Shadowsocks-4.0.1.zip 配置ShadowSocks 下载后，打开ShadowSocks客户端，配置远端服务器信息。 启用ShadowSocks客户端 正确启动ShadowSocks客户端以后，就打开了一个本地的代理端口1723，本地应用如果需要使用这个代理，还需要进行一定的配置。除了Chrome以外，其它很多程序也可以配置代理，我们主要讲解Chrome的代理配置。 3. 配置Chrome代理 配置Chrome系统代理 在Chrome设置中找到系统代理设置 这个Chrome的代理设置实际上和IE浏览器的代理设置是共享的，设置方法也一样。 依次点击“连接”——“局域网设置”，按照下图配置代理服务器 配置好以后，Chrome就可以通过代理上网了 配置Chrome自动代理 配置好Chrome系统代理后，Chrome所有的访问都将通过代理服务器，一方面增加服务器的压力，占用带宽和流量，另一方面，很多国内的站点，还通过代理服务器访问，会影响上网速度。 下面我们通过Proxy SwitchyOmega这个Chrome扩展程序，配置Chrome自动切换代理功能。 下载Proxy SwitchyOmega。 这一步不做展开，但最便捷的方式是通过Chrome网上应用店搜索下载，这个操作本身就需要使用代理上网。 配置Proxy SwichyOmega。 首先，新建一个通过代理上网的情景模式。 然后，配置auto switch情景模式。 在规则列表中，输入规则列表网址，并点击“立即更新情景模式”，SwitchyOmega会自动下载规则列表，并在下方显示更新。 1https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt 选择AutoProxy 全部配置好以后，如下图所示。 记得配置完成后要点击左下方的“应用选项”，使修改生效。 应用auto switch情景模式]]></content>
+      <categories>
+        <category>杂项技术</category>
+      </categories>
+      <tags>
+        <tag>杂项技术</tag>
+        <tag>实用工具</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[如何搭建自己的github]]></title>
+    <url>%2F2018%2F01%2F31%2Fhow%20to%20build%20your%20own%20github%2F</url>
+    <content type="text"><![CDATA[建立Git环境关联Github操作技巧1. 为本地库添加远程库现在，我们根据GitHub的提示，在本地的learngit仓库下运行命令： 1$ git remote add origin git@github.com:michaelliao/learngit.git]]></content>
+      <categories>
+        <category>杂项技术</category>
+      </categories>
+      <tags>
+        <tag>杂项技术</tag>
+        <tag>github</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[一些有用的技术、工具和站点]]></title>
+    <url>%2F2018%2F01%2F31%2Flist%20of%20the%20useful%20tools%20and%20sites%2F</url>
+    <content type="text"><![CDATA[（持续更新中…） 站点推荐1. Github2. Library Genesis 在这里可以下载到很多计算机类的电子书，而且都是相对清晰的pdf文档。 云服务系列1. AWS2. 七牛云3.实用技术1. Markdown2. 思维导图实用工具1. Typora2. ShadowSocks3. FreeMind]]></content>
+      <categories>
+        <category>杂项技术</category>
+      </categories>
+      <tags>
+        <tag>杂项技术</tag>
+        <tag>github</tag>
+        <tag>实用工具</tag>
+        <tag>站点推荐</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[如何利用hexo在github上建立自己的博客]]></title>
+    <url>%2F2018%2F01%2F30%2Fhowtobuildhexoblogingithub%2F</url>
+    <content type="text"><![CDATA[1 建立hexo本地站点具体参考https://hexo.io/主要步骤：1hexo init 1hexo g 1hexo s 默认端口为4000，如果该端口被占用，可以通过hexo s -p 8080将端口改为8080 2 配置主题在https://hexo.io/themes/ 中选择适合自己的主题，并copy到themes文件夹以下以next主题为例 3 配置github自动部署参考https://linghucong.js.org/2016/04/15/2016-04-15-hexo-github-pages-blog/主要步骤：修改站点根目录下的_config.yml 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293# Hexo Configuration## Docs: https://hexo.io/docs/configuration.html## Source: https://github.com/hexojs/hexo/# Sitetitle: 民科小屋subtitle: 计算机民科description:author: xiaofengwolanguage: zh-Hanstimezone:# URL## If your site is put in a subdirectory, set url as &apos;http://yoursite.com/child&apos; and root as &apos;/child/&apos;url: http://ifuleyou.github.ioroot: /permalink: :year/:month/:day/:title/permalink_defaults:# Directorysource_dir: sourcepublic_dir: publictag_dir: tagsarchive_dir: archivescategory_dir: categoriescode_dir: downloads/codei18n_dir: :langskip_render:# Writingnew_post_name: :title.md # File name of new postsdefault_layout: posttitlecase: false # Transform title into titlecaseexternal_link: true # Open external links in new tabfilename_case: 0render_drafts: falsepost_asset_folder: falserelative_link: falsefuture: truehighlight: enable: true line_number: true auto_detect: false tab_replace:# Category &amp; Tagdefault_category: uncategorizedcategory_map:tag_map:# Date / Time format## Hexo uses Moment.js to parse and display date## You can customize the date format as defined in## http://momentjs.com/docs/#/displaying/format/date_format: YYYY-MM-DDtime_format: HH:mm:ss# Pagination## Set per_page to 0 to disable paginationper_page: 5pagination_dir: pageindex_generator: per_page: 5archive_generator: per_page: 20 yearly: true monthly: truetag_generator: per_page: 15# Extensions## Plugins: https://hexo.io/plugins/## Themes: https://hexo.io/themes/theme: next# Deployment## Docs: https://hexo.io/docs/deployment.htmldeploy: type: git repo: git@github.com:ifuleyou/ifuleyou.github.io.git branch: mastersearch: path: search.xml field: post format: html limit: 10000 4 配置评论、评分、访问计数在themes/next/_config.yml里修改以下配置并且按照配置文件中给出的站点到相应的网站中注册账号，获取相应信息 1234567891011121314151617181920# Star rating support to each article.# To get your ID visit https://widgetpack.comrating: enable: true id: xxxx color: fc6423# ---------------------------------------------------------------# Show number of visitors to each article.# You can visit https://leancloud.cn get AppID and AppKey.leancloud_visitors: enable: true app_id: xxxxx app_key: xxxxxxxx# Disqusdisqus: enable: true shortname: xiaofengwo count: true 5 如何为next主题添加背景效果next主题有一个十分有趣的js背景效果，可以跟随鼠标的移动，汇集背景中随机浮动的点，并在每两个点之间生成一条线段，生生灭灭，聚聚散散，科技感十足，特别受广大民科喜欢。 6 为hexo博客插入图片 七牛云存储 首先，到https://www.qiniu.com网站注册账号，需要实名认证。 然后，创建自己的存储空间。 利用图床软件（windows下的uwp图床，mac下的U图床等）将图片上传到自己的存储空间后，获得url，直接利用url访问即可。 此方法的好处，是操作简便，无需关心图片的具体存放，且七牛会为图片进行瘦身，访问速度较快。另外，图片资源不需要存放到hexo的source文件夹下，可以减少本地存储以及git同步时的时间空间开销，也较易于进行跨越博客平台的迁移。 利用hexo-asset-image上传图片 直接摘抄https://www.jianshu.com/p/c2ba9533088a中的步骤 1.首先确认_config.yml 中有 post_asset_folder:true。Hexo 提供了一种更方便管理 Asset 的设定：post_asset_folder当您设置post_asset_folder为true参数后，在建立文件时，Hexo会自动建立一个与文章同名的文件夹，您可以把与该文章相关的所有资源都放到那个文件夹，如此一来，您便可以更方便的使用资源。 2.在hexo的目录下执行npm install https://github.com/CodeFalling/hexo-asset-image --save（需要等待一段时间）。 3.完成安装后用hexo新建文章的时候会发现_posts目录下面会多出一个和文章名字一样的文件夹。图片就可以放在文件夹下面。结构如下： 12345本地图片测试├── apppicker.jpg├── logo.jpg└── rules.jpg本地图片测试.md 这样的目录结构（目录名和文章名一致），只要使用 ![logo](本地图片测试/logo.jpg) 就可以插入图片。其中[]里面不写文字则没有图片标题。生成的结构为 12345public/2016/3/9/本地图片测试├── apppicker.jpg├── index.html├── logo.jpg└── rules.jpg 同时，生成的 html 是 &lt;img src=&quot;/2016/3/9/本地图片测试/logo.jpg&quot; alt=&quot;logo&quot;&gt; 而不是愚蠢的 &lt;img src=&quot;本地图片测试/logo.jpg&quot; alt=&quot;logo&quot;&gt; 注意:通过常规的 markdown 语法和相对路径来引用图片和其它资源可能会导致它们在存档页或者主页上显示不正确。在Hexo2时代，社区创建了很多插件来解决这个问题。但是，随着Hexo3的发布，许多新的标签插件被加入到了核心代码中。这使得你可以更简单地在文章中引用你的资源。 比如说：当你打开文章资源文件夹功能后，你把一个 example.jpg图片放在了你的资源文件夹中，如果通过使用相对路径的常规 markdown 语法 [](/example.jpg)，它将 不会 出现在首页上。（但是它会在文章中按你期待的方式工作） 正确的引用图片方式是使用下列的标签插件而不是markdown ​]]></content>
+      <categories>
+        <category>杂项技术</category>
+      </categories>
+      <tags>
+        <tag>杂项技术</tag>
+        <tag>github</tag>
+      </tags>
+  </entry>
+</search>
