@@ -100,23 +100,28 @@
 
 
   
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="杂项技术," />
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="民科小屋">
-<meta property="og:url" content="http://ifuleyou.github.io/archives/2018/02/index.html">
+<meta name="description" content="docx文件提交到git很容易，对docx文件实现版本管理的难点在于如何比较其中的差异，方法简要概述如下：  利用pandoc实现将docx文件转成md文件（只能是docx，而不能是doc） 通过git hook，配置pre-commit和post-commit，在git commit时自动调用生成md文件的过程，并将md文件提交到库中 md文件作为docx的副本，且可以通过diff直接查看  参">
+<meta name="keywords" content="杂项技术">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何实现docx文档的版本管理">
+<meta property="og:url" content="http://ifuleyou.github.io/2018/03/18/howtotrackdocxfilewithgit/index.html">
 <meta property="og:site_name" content="民科小屋">
+<meta property="og:description" content="docx文件提交到git很容易，对docx文件实现版本管理的难点在于如何比较其中的差异，方法简要概述如下：  利用pandoc实现将docx文件转成md文件（只能是docx，而不能是doc） 通过git hook，配置pre-commit和post-commit，在git commit时自动调用生成md文件的过程，并将md文件提交到库中 md文件作为docx的副本，且可以通过diff直接查看  参">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-18T13:11:38.666Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="民科小屋">
+<meta name="twitter:title" content="如何实现docx文档的版本管理">
+<meta name="twitter:description" content="docx文件提交到git很容易，对docx文件实现版本管理的难点在于如何比较其中的差异，方法简要概述如下：  利用pandoc实现将docx文件转成md文件（只能是docx，而不能是doc） 通过git hook，配置pre-commit和post-commit，在git commit时自动调用生成md文件的过程，并将md文件提交到库中 md文件作为docx的副本，且可以通过diff直接查看  参">
 
 
 
 
 
 
-  <link rel="canonical" href="http://ifuleyou.github.io/archives/2018/02/"/>
+  <link rel="canonical" href="http://ifuleyou.github.io/2018/03/18/howtotrackdocxfilewithgit/"/>
 
 
 
@@ -125,7 +130,7 @@
     sidebar: "",
   };
 </script>
-  <title>Archive | 民科小屋</title>
+  <title>如何实现docx文档的版本管理 | 民科小屋</title>
   
 
 
@@ -172,7 +177,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -311,80 +316,280 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
 
-      
-      <span class="archive-page-counter">
-        
-        
-        
-          
-        
-        Um..! 5 posts in total. Keep on posting.
-      </span>
-      
-
-      
-
-        
-        
-        
-
-        
-          
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2018">2018</h1>
-          </div>
-        
-        
-
-        
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ifuleyou.github.io/2018/03/18/howtotrackdocxfilewithgit/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xiaofengwo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="民科小屋">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2018/02/06/instruction-to-use-shadowsocks-for-system-proxy/" itemprop="url">
-              
-                <span itemprop="name">如何利用shadowsocks配置系统代理</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">如何实现docx文档的版本管理</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-02-06T17:06:59+08:00"
-              content="2018-02-06" >
-          02-06
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-03-18T20:59:48+08:00">2018-03-18</time>
+            
 
-    </header>
-  </article>
+            
+            
 
+            
+          </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/杂项技术/" itemprop="url" rel="index"><span itemprop="name">杂项技术</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/03/18/howtotrackdocxfilewithgit/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/03/18/howtotrackdocxfilewithgit/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/03/18/howtotrackdocxfilewithgit/" class="leancloud_visitors" data-flag-title="如何实现docx文档的版本管理">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Visitors&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Symbols count in article&#58;</span>
+                
+                <span title="Symbols count in article">1.8k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Reading time &asymp;</span>
+                
+                <span title="Reading time">0:02</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
+      
 
+      
+        <p>docx文件提交到git很容易，对docx文件实现版本管理的难点在于如何比较其中的差异，方法简要概述如下：</p>
+<ol>
+<li>利用pandoc实现将docx文件转成md文件（只能是docx，而不能是doc）</li>
+<li>通过git hook，配置pre-commit和post-commit，在git commit时自动调用生成md文件的过程，并将md文件提交到库中</li>
+<li>md文件作为docx的副本，且可以通过diff直接查看</li>
+</ol>
+<p>参考：<a href="https://github.com/vigente/gerardus/wiki/Integrate-git-diffs-with-word-docx-files" target="_blank" rel="noopener">https://github.com/vigente/gerardus/wiki/Integrate-git-diffs-with-word-docx-files</a></p>
+<h2 id="1-安装pandoc"><a href="#1-安装pandoc" class="headerlink" title="1. 安装pandoc"></a>1. 安装pandoc</h2><h2 id="2-Tell-git-how-to-handle-diffs-of-docx-files"><a href="#2-Tell-git-how-to-handle-diffs-of-docx-files" class="headerlink" title="2. Tell git how to handle diffs of .docx files."></a>2. Tell git how to handle diffs of .docx files.</h2><ol>
+<li><p>Create or edit file ~/.gitconfig (linux, Mac) or “c:\Documents and Settings\user.gitconfig” (Windows) to add</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[diff &quot;pandoc&quot;]</span><br><span class="line">  textconv=pandoc --to=markdown</span><br><span class="line">  prompt = false</span><br><span class="line">[alias]</span><br><span class="line">  wdiff = diff --word-diff=color --unified=1</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>In your paper directory, create or edit file .gitattributes (linux, Windows and Mac) to add</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*.docx diff=pandoc</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>You can commit .gitattributes so that it stays with your paper for use in other computers, but you’ll need to edit ~/.gitconfig in every new computer you want to use.</p>
+</li>
+</ol>
+<h2 id="3-配置git-hook"><a href="#3-配置git-hook" class="headerlink" title="3. 配置git hook"></a>3. 配置git hook</h2><p>This is only going to work from linux/Mac or Windows running git from a bash shell.</p>
+<ol>
+<li><p><a href="http://pandoc.org/installing.html" target="_blank" rel="noopener"><strong>Install pandoc</strong></a>. Pandoc is a program to convert between different file formats. It’s going to allow us to convert Word files (.docx) to Markdown (.md).</p>
+</li>
+<li><p><strong>Set up git hooks to enable automatic generation and tracking of Markdown copies of .docx files.</strong></p>
+<p>Copy these hook files to your git project’s <code>.git/hooks</code> directory and rename them, or soft-link to them with <code>ln -s</code>, and make them executable (<code>chmod u+x *.sh</code>):</p>
+<ul>
+<li><a href="https://github.com/vigente/gerardus/blob/master/shell-script/pre-commit-git-diff-docx.sh" target="_blank" rel="noopener">pre-commit-git-diff-docx.sh</a> -&gt; .git/hooks/pre-commit</li>
+<li><a href="https://github.com/vigente/gerardus/blob/master/shell-script/post-commit-git-diff-docx.sh" target="_blank" rel="noopener">post-commit-git-diff-docx.sh</a> -&gt; .git/hooks/post-commit</li>
+</ul>
+<p>Now every time you run <code>git commit</code>, the pre-commit hook will automatically run before you see the window to enter the log message. The hook is a script that makes a copy in Markdown format (.md) of every .docx file you are committing. The post-commit hook then amends the commit adding the .md files.</p>
+</li>
+</ol>
+
+      
     </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/杂项技术/" rel="tag"># 杂项技术</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+          <div class="wp_rating">
+            <div id="wpac-rating"></div>
+          </div>
+        
+
+        
+
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/06/instruction-to-use-shadowsocks-for-system-proxy/" rel="next" title="如何利用shadowsocks配置系统代理">
+                <i class="fa fa-chevron-left"></i> 如何利用shadowsocks配置系统代理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
           
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
 
         </div>
         
@@ -405,8 +610,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -487,6 +701,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-安装pandoc"><span class="nav-number">1.</span> <span class="nav-text">1. 安装pandoc</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Tell-git-how-to-handle-diffs-of-docx-files"><span class="nav-number">2.</span> <span class="nav-text">2. Tell git how to handle diffs of .docx files.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-配置git-hook"><span class="nav-number">3.</span> <span class="nav-text">3. 配置git hook</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -654,6 +884,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.3"></script>
+
+
 
   
 
@@ -668,6 +902,23 @@
     <script id="dsq-count-scr" src="https://xiaofengwo.disqus.com/count.js" async></script>
   
 
+  
+    <script type="text/javascript">
+      var disqus_config = function () {
+        this.page.url = 'http://ifuleyou.github.io/2018/03/18/howtotrackdocxfilewithgit/';
+        this.page.identifier = '2018/03/18/howtotrackdocxfilewithgit/';
+        this.page.title = '如何实现docx文档的版本管理';
+      };
+      function loadComments () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://xiaofengwo.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      }
+      
+        loadComments();
+      
+    </script>
   
 
 
@@ -1151,6 +1402,23 @@
 
   
   
+  <script type="text/javascript">
+  wpac_init = window.wpac_init || [];
+  wpac_init.push({widget: 'Rating', id: 9394,
+    el: 'wpac-rating',
+    color: 'fc6423'
+  });
+  (function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = '//embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+  })();
+  </script>
+
 
   
 

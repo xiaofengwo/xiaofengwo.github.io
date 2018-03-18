@@ -328,6 +328,207 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ifuleyou.github.io/2018/03/18/howtotrackdocxfilewithgit/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xiaofengwo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="民科小屋">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/03/18/howtotrackdocxfilewithgit/" itemprop="url">如何实现docx文档的版本管理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-03-18T20:59:48+08:00">2018-03-18</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/杂项技术/" itemprop="url" rel="index"><span itemprop="name">杂项技术</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/03/18/howtotrackdocxfilewithgit/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/03/18/howtotrackdocxfilewithgit/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/03/18/howtotrackdocxfilewithgit/" class="leancloud_visitors" data-flag-title="如何实现docx文档的版本管理">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Visitors&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Symbols count in article&#58;</span>
+                
+                <span title="Symbols count in article">1.8k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Reading time &asymp;</span>
+                
+                <span title="Reading time">0:02</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          docx文件提交到git很容易，对docx文件实现版本管理的难点在于如何比较其中的差异，方法简要概述如下：
+
+利用pandoc实现将docx文件转成md文件（只能是docx，而不能是doc）
+通过git hook，配置pre-commit和post-commit，在git commit时自动调用生成md文件的过程，并将md文件提交到库中
+md文件作为docx的副本，且可以通过diff直接查看
+
+参考：https://github.com/vigente/gerardus/wiki/Integra
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/03/18/howtotrackdocxfilewithgit/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://ifuleyou.github.io/2018/02/06/instruction-to-use-shadowsocks-for-system-proxy/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -840,7 +1041,7 @@ Shadowsocks-4.0.1.zip
                 
                   <span class="post-meta-item-text">Symbols count in article&#58;</span>
                 
-                <span title="Symbols count in article">160</span>
+                <span title="Symbols count in article">243</span>
               
 
               
@@ -877,8 +1078,22 @@ Shadowsocks-4.0.1.zip
         
           
           （持续更新中…）
+
 站点推荐1.  Github2.  Library Genesis  在这里可以下载到很多计算机类的电子书，而且都是相对清晰的pdf文档。
-云服务系列1. AWS2. 七牛云3.实用技术1. Markdown2. 思维导图实用工具1.  Typora2.  ShadowSocks3. FreeMind
+
+
+
+云服务系列1. AWS2. 七牛云3.
+
+
+实用技术1. Markdown2. 思维导图
+
+
+实用工具1.  Typora2.  ShadowSocks3. FreeMind4. Anaconda5. 010Editor一款集成了python包的软件，不需要考虑包之间的依赖关系，很方便。
+Anaconda官方网站
+
+
+
           
           <!--noindex-->
           <div class="post-button text-center">
@@ -1167,7 +1382,7 @@ Shadowsocks-4.0.1.zip
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-count">5</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -1255,7 +1470,7 @@ Shadowsocks-4.0.1.zip
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="Symbols count total">5k</span>
+    <span title="Symbols count total">7k</span>
   
 
   
@@ -1264,7 +1479,7 @@ Shadowsocks-4.0.1.zip
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="Reading time total">0:05</span>
+    <span title="Reading time total">0:07</span>
   
 </div>
 

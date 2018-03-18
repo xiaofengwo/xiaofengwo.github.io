@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[如何实现docx文档的版本管理]]></title>
+    <url>%2F2018%2F03%2F18%2Fhowtotrackdocxfilewithgit%2F</url>
+    <content type="text"><![CDATA[docx文件提交到git很容易，对docx文件实现版本管理的难点在于如何比较其中的差异，方法简要概述如下： 利用pandoc实现将docx文件转成md文件（只能是docx，而不能是doc） 通过git hook，配置pre-commit和post-commit，在git commit时自动调用生成md文件的过程，并将md文件提交到库中 md文件作为docx的副本，且可以通过diff直接查看 参考：https://github.com/vigente/gerardus/wiki/Integrate-git-diffs-with-word-docx-files 1. 安装pandoc2. Tell git how to handle diffs of .docx files. Create or edit file ~/.gitconfig (linux, Mac) or “c:\Documents and Settings\user.gitconfig” (Windows) to add 12345[diff &quot;pandoc&quot;] textconv=pandoc --to=markdown prompt = false[alias] wdiff = diff --word-diff=color --unified=1 In your paper directory, create or edit file .gitattributes (linux, Windows and Mac) to add 1*.docx diff=pandoc You can commit .gitattributes so that it stays with your paper for use in other computers, but you’ll need to edit ~/.gitconfig in every new computer you want to use. 3. 配置git hookThis is only going to work from linux/Mac or Windows running git from a bash shell. Install pandoc. Pandoc is a program to convert between different file formats. It’s going to allow us to convert Word files (.docx) to Markdown (.md). Set up git hooks to enable automatic generation and tracking of Markdown copies of .docx files. Copy these hook files to your git project’s .git/hooks directory and rename them, or soft-link to them with ln -s, and make them executable (chmod u+x *.sh): pre-commit-git-diff-docx.sh -&gt; .git/hooks/pre-commit post-commit-git-diff-docx.sh -&gt; .git/hooks/post-commit Now every time you run git commit, the pre-commit hook will automatically run before you see the window to enter the log message. The hook is a script that makes a copy in Markdown format (.md) of every .docx file you are committing. The post-commit hook then amends the commit adding the .md files.]]></content>
+      <categories>
+        <category>杂项技术</category>
+      </categories>
+      <tags>
+        <tag>杂项技术</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[如何利用shadowsocks配置系统代理]]></title>
     <url>%2F2018%2F02%2F06%2Finstruction-to-use-shadowsocks-for-system-proxy%2F</url>
     <content type="text"><![CDATA[1. 配置AWS服务器如果没有搭建远端shadowsocks服务器的需求，可以跳过这一步。 （待补充） 申请AWS账号 配置远端ShadowSocks服务器 2. 配置本地ShadowSocks客户端 下载ShadowSocks Shadowsocks-4.0.1.zip 配置ShadowSocks 下载后，打开ShadowSocks客户端，配置远端服务器信息。 启用ShadowSocks客户端 正确启动ShadowSocks客户端以后，就打开了一个本地的代理端口1723，本地应用如果需要使用这个代理，还需要进行一定的配置。除了Chrome以外，其它很多程序也可以配置代理，我们主要讲解Chrome的代理配置。 3. 配置Chrome代理 配置Chrome系统代理 在Chrome设置中找到系统代理设置 这个Chrome的代理设置实际上和IE浏览器的代理设置是共享的，设置方法也一样。 依次点击“连接”——“局域网设置”，按照下图配置代理服务器 配置好以后，Chrome就可以通过代理上网了 配置Chrome自动代理 配置好Chrome系统代理后，Chrome所有的访问都将通过代理服务器，一方面增加服务器的压力，占用带宽和流量，另一方面，很多国内的站点，还通过代理服务器访问，会影响上网速度。 下面我们通过Proxy SwitchyOmega这个Chrome扩展程序，配置Chrome自动切换代理功能。 下载Proxy SwitchyOmega。 这一步不做展开，但最便捷的方式是通过Chrome网上应用店搜索下载，这个操作本身就需要使用代理上网。 配置Proxy SwichyOmega。 首先，新建一个通过代理上网的情景模式。 然后，配置auto switch情景模式。 在规则列表中，输入规则列表网址，并点击“立即更新情景模式”，SwitchyOmega会自动下载规则列表，并在下方显示更新。 1https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt 选择AutoProxy 全部配置好以后，如下图所示。 记得配置完成后要点击左下方的“应用选项”，使修改生效。 应用auto switch情景模式]]></content>
@@ -27,7 +38,7 @@
   <entry>
     <title><![CDATA[一些有用的技术、工具和站点]]></title>
     <url>%2F2018%2F01%2F31%2Flist%20of%20the%20useful%20tools%20and%20sites%2F</url>
-    <content type="text"><![CDATA[（持续更新中…） 站点推荐1. Github2. Library Genesis 在这里可以下载到很多计算机类的电子书，而且都是相对清晰的pdf文档。 云服务系列1. AWS2. 七牛云3.实用技术1. Markdown2. 思维导图实用工具1. Typora2. ShadowSocks3. FreeMind]]></content>
+    <content type="text"><![CDATA[（持续更新中…） 站点推荐1. Github2. Library Genesis 在这里可以下载到很多计算机类的电子书，而且都是相对清晰的pdf文档。 云服务系列1. AWS2. 七牛云3. 实用技术1. Markdown2. 思维导图 实用工具1. Typora2. ShadowSocks3. FreeMind4. Anaconda5. 010Editor一款集成了python包的软件，不需要考虑包之间的依赖关系，很方便。 Anaconda官方网站]]></content>
       <categories>
         <category>杂项技术</category>
       </categories>
