@@ -100,23 +100,30 @@
 
 
   
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="学术," />
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="民科小屋">
-<meta property="og:url" content="http://ifuleyou.github.io/archives/2018/index.html">
+<meta name="description" content="以下记录了通过LLVM实现IR指令复算的关键技术问题。 1 如何插入一条指令参考：https://stackoverflow.com/questions/35198935/add-an-llvm-instruction 12345678BasicBlock *B = I-&amp;gt;getParent();if (auto *op = dyn_cast&amp;lt;BinaryOperator&amp;gt;(&amp;a">
+<meta name="keywords" content="学术">
+<meta property="og:type" content="article">
+<meta property="og:title" content="学习LLVM，并实现中间代码级的指令复算">
+<meta property="og:url" content="http://ifuleyou.github.io/2018/03/27/LLVMlearning/index.html">
 <meta property="og:site_name" content="民科小屋">
+<meta property="og:description" content="以下记录了通过LLVM实现IR指令复算的关键技术问题。 1 如何插入一条指令参考：https://stackoverflow.com/questions/35198935/add-an-llvm-instruction 12345678BasicBlock *B = I-&amp;gt;getParent();if (auto *op = dyn_cast&amp;lt;BinaryOperator&amp;gt;(&amp;a">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://ifuleyou.github.io/2018/03/27/LLVMlearning/InstructionClassGraph.jpg">
+<meta property="og:updated_time" content="2018-03-27T14:49:48.764Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="民科小屋">
+<meta name="twitter:title" content="学习LLVM，并实现中间代码级的指令复算">
+<meta name="twitter:description" content="以下记录了通过LLVM实现IR指令复算的关键技术问题。 1 如何插入一条指令参考：https://stackoverflow.com/questions/35198935/add-an-llvm-instruction 12345678BasicBlock *B = I-&amp;gt;getParent();if (auto *op = dyn_cast&amp;lt;BinaryOperator&amp;gt;(&amp;a">
+<meta name="twitter:image" content="http://ifuleyou.github.io/2018/03/27/LLVMlearning/InstructionClassGraph.jpg">
 
 
 
 
 
 
-  <link rel="canonical" href="http://ifuleyou.github.io/archives/2018/"/>
+  <link rel="canonical" href="http://ifuleyou.github.io/2018/03/27/LLVMlearning/"/>
 
 
 
@@ -125,7 +132,7 @@
     sidebar: "",
   };
 </script>
-  <title>Archive | 民科小屋</title>
+  <title>学习LLVM，并实现中间代码级的指令复算 | 民科小屋</title>
   
 
 
@@ -172,7 +179,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -311,265 +318,269 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-      
-      <span class="archive-page-counter">
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ifuleyou.github.io/2018/03/27/LLVMlearning/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xiaofengwo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="民科小屋">
+    </span>
+
+    
+      <header class="post-header">
+
         
         
+          <h1 class="post-title" itemprop="name headline">学习LLVM，并实现中间代码级的指令复算</h1>
         
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-03-27T15:21:44+08:00">2018-03-27</time>
+            
+
+            
+            
+
+            
+          </span>
+
           
-        
-        Um..! 6 posts in total. Keep on posting.
-      </span>
-      
 
-      
-
-        
-        
-        
-
-        
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2018">2018</h1>
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/03/27/LLVMlearning/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/03/27/LLVMlearning/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/03/27/LLVMlearning/" class="leancloud_visitors" data-flag-title="学习LLVM，并实现中间代码级的指令复算">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Visitors&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Symbols count in article&#58;</span>
+                
+                <span title="Symbols count in article">2.5k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Reading time &asymp;</span>
+                
+                <span title="Reading time">0:02</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>以下记录了通过LLVM实现IR指令复算的关键技术问题。</p>
+<h2 id="1-如何插入一条指令"><a href="#1-如何插入一条指令" class="headerlink" title="1 如何插入一条指令"></a>1 如何插入一条指令</h2><p>参考：<a href="https://stackoverflow.com/questions/35198935/add-an-llvm-instruction" target="_blank" rel="noopener">https://stackoverflow.com/questions/35198935/add-an-llvm-instruction</a></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">BasicBlock *B = I-&gt;getParent();</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">auto</span> *op = dyn_cast&lt;BinaryOperator&gt;(&amp;*I)) </span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">auto</span> temp = op-&gt;clone();</span><br><span class="line">    B-&gt;getInstList().insert(op, temp);</span><br><span class="line">    temp-&gt;setName(op-&gt;getName());</span><br><span class="line">    op-&gt;replaceAllUsesWith(temp); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中，I是Instruction，BinaryOperator是Instruction的子类。</p>
+<h2 id="2-如何识别扫描到的指令的类型"><a href="#2-如何识别扫描到的指令的类型" class="headerlink" title="2 如何识别扫描到的指令的类型"></a>2 如何识别扫描到的指令的类型</h2><p>参考：<a href="https://stackoverflow.com/questions/30250289/how-to-check-the-opcode-of-an-instruction" target="_blank" rel="noopener">https://stackoverflow.com/questions/30250289/how-to-check-the-opcode-of-an-instruction</a></p>
+<blockquote>
+<p>5<a href="">down vote</a>accepted</p>
+<p><code>isa</code> is used to check for an existing dirived instruction class. class <code>i.getopcode()</code> could help you to get all the operations information.</p>
+<p>According to <a href="http://llvm.org/docs/doxygen/html/classllvm_1_1Instruction.html" target="_blank" rel="noopener">the Inheritance diagram for <code>llvm::Instruction</code></a>,LLVM internally will divide all the instruction into several different classes, like <code>llvm::BinaryOperator</code>, <code>llvm::CallInst</code>, <code>llvm::CmpInst</code>, etc. But there is no exact operation information for these classes.</p>
+<p>However, for <code>Instruction::getOpcode()</code>, it will directly get the operation from the <code>llvm::Instruction</code> object. You could refer to <a href="https://llvm.org/svn/llvm-project/llvm/trunk/include/llvm/IR/Instruction.def" target="_blank" rel="noopener">Instruction.def</a> for an idea about defination of each instruction. Basically, the opcode will be the exact operations the instruction intends to.</p>
+<p>Say, for an LLVM IR <code>add</code>. You can use <code>isa&lt;llvm::BinaryOperator&gt;</code>, to know that this is a <code>BinaryOperator</code>. But this is only for what the instruction class it is. If you want to know whether it is an <code>ADD</code> or a <code>SUB</code>. <code>i.getopcode()</code> should be used here.</p>
+</blockquote>
+<p>上面给出了几个很好的总结。</p>
+<ul>
+<li><p>Instruction 有多少子类</p>
+<p>在<a href="http://llvm.org/doxygen/classllvm_1_1Instruction.html中，有Instruction的继承关系，可以看到Instruction所有的子类" target="_blank" rel="noopener">http://llvm.org/doxygen/classllvm_1_1Instruction.html中，有Instruction的继承关系，可以看到Instruction所有的子类</a></p>
+<p><img src="InstructionClassGraph.jpg" alt="InstructionClassGraph.jpg"></p>
+</li>
+<li><p>查询每个指令具体属于的操作码，如对于BinaryOperator，具体是ADD还是SUB</p>
+<p><a href="https://llvm.org/svn/llvm-project/llvm/trunk/include/llvm/IR/Instruction.def" target="_blank" rel="noopener">https://llvm.org/svn/llvm-project/llvm/trunk/include/llvm/IR/Instruction.def</a></p>
+<p>但目前并不知道如何使用这些信息。</p>
+</li>
+</ul>
+<ul>
+<li><p>使用isa\<llvm::binaryoperator\>确定属于哪个子类，使用i.getopcode()确定是子类中的哪个操作</llvm::binaryoperator\></p>
+<p>isa<loadinst>(i) and isa<storeinst>(i) without changing to if (i.getopcode()==…)</storeinst></loadinst></p>
+</li>
+</ul>
+<h2 id="3-如何为指令插入Metadata"><a href="#3-如何为指令插入Metadata" class="headerlink" title="3. 如何为指令插入Metadata"></a>3. 如何为指令插入Metadata</h2><p>插入字符串类型，借助MDString类，以下为获取每条指令的操作码的名字</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Value *Elts[] = &#123;</span><br><span class="line">  MDString::get(context, inst-&gt;getOpcodeName(inst-&gt;getOpcode()))</span><br><span class="line">&#125;;</span><br><span class="line">MDNode *Node = MDNode::get(context, Elts);</span><br><span class="line">temp-&gt;setMetadata(<span class="string">"mxk"</span>, Node);</span><br></pre></td></tr></table></figure>
+<p>插入数字类型</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;Value*&gt; llfiindex(<span class="number">1</span>);</span><br><span class="line">llfiindex[<span class="number">0</span>] = ConstantInt::get(Type::getInt64Ty(context), fi_index++);</span><br><span class="line">MDNode *mdnode = MDNode::get(context, llfiindex);</span><br><span class="line">inst-&gt;setMetadata(<span class="string">"mxk"</span>, mdnode);</span><br></pre></td></tr></table></figure>
+<p>删除一条指令的Metadata</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Instruction *temp = inst-&gt;clone();</span><br><span class="line">temp-&gt;setMetadata(<span class="string">"llfi_index"</span>, <span class="literal">NULL</span>);</span><br></pre></td></tr></table></figure>
+<h2 id="4-复算实现"><a href="#4-复算实现" class="headerlink" title="4. 复算实现"></a>4. 复算实现</h2><p>针对不同的指令，进行不同的操作。</p>
+<p>swift：</p>
+<p>AllocaInst，分配内存指针，需要在其后添加对上一寄存器值的复算</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/学术/" rel="tag"># 学术</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+          <div class="wp_rating">
+            <div id="wpac-rating"></div>
           </div>
         
-        
 
         
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
         
-            <a class="post-title-link" href="/2018/03/27/LLVMlearning/" itemprop="url">
-              
-                <span itemprop="name">学习LLVM，并实现中间代码级的指令复算</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-03-27T15:21:44+08:00"
-              content="2018-03-27" >
-          03-27
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
+        </div>
+      
       
 
-        
-        
-        
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/18/howtotrackdocxfilewithgit/" rel="next" title="如何实现docx文档的版本管理">
+                <i class="fa fa-chevron-left"></i> 如何实现docx文档的版本管理
+              </a>
+            
+          </div>
 
-        
-        
+          <span class="post-nav-divider"></span>
 
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/03/18/howtotrackdocxfilewithgit/" itemprop="url">
-              
-                <span itemprop="name">如何实现docx文档的版本管理</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-03-18T20:59:48+08:00"
-              content="2018-03-18" >
-          03-18
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
       
 
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/02/06/instruction-to-use-shadowsocks-for-system-proxy/" itemprop="url">
-              
-                <span itemprop="name">如何利用shadowsocks配置系统代理</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-02-06T17:06:59+08:00"
-              content="2018-02-06" >
-          02-06
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/01/31/how to build your own github/" itemprop="url">
-              
-                <span itemprop="name">如何搭建自己的github</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-01-31T11:00:00+08:00"
-              content="2018-01-31" >
-          01-31
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/01/31/list of the useful tools and sites/" itemprop="url">
-              
-                <span itemprop="name">一些有用的技术、工具和站点</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-01-31T11:00:00+08:00"
-              content="2018-01-31" >
-          01-31
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/01/30/howtobuildhexoblogingithub/" itemprop="url">
-              
-                <span itemprop="name">如何利用hexo在github上建立自己的博客</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-01-30T21:00:00+08:00"
-              content="2018-01-30" >
-          01-30
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-    </div>
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
           
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
 
         </div>
         
@@ -590,8 +601,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -674,6 +694,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-如何插入一条指令"><span class="nav-number">1.</span> <span class="nav-text">1 如何插入一条指令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-如何识别扫描到的指令的类型"><span class="nav-number">2.</span> <span class="nav-text">2 如何识别扫描到的指令的类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-如何为指令插入Metadata"><span class="nav-number">3.</span> <span class="nav-text">3. 如何为指令插入Metadata</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-复算实现"><span class="nav-number">4.</span> <span class="nav-text">4. 复算实现</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -841,6 +877,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.3"></script>
+
+
 
   
 
@@ -855,6 +895,23 @@
     <script id="dsq-count-scr" src="https://xiaofengwo.disqus.com/count.js" async></script>
   
 
+  
+    <script type="text/javascript">
+      var disqus_config = function () {
+        this.page.url = 'http://ifuleyou.github.io/2018/03/27/LLVMlearning/';
+        this.page.identifier = '2018/03/27/LLVMlearning/';
+        this.page.title = '学习LLVM，并实现中间代码级的指令复算';
+      };
+      function loadComments () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://xiaofengwo.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      }
+      
+        loadComments();
+      
+    </script>
   
 
 
@@ -1338,6 +1395,23 @@
 
   
   
+  <script type="text/javascript">
+  wpac_init = window.wpac_init || [];
+  wpac_init.push({widget: 'Rating', id: 9394,
+    el: 'wpac-rating',
+    color: 'fc6423'
+  });
+  (function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = '//embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+  })();
+  </script>
+
 
   
 
