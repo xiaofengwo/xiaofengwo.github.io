@@ -112,7 +112,8 @@
 <meta property="og:description" content="以下记录了通过LLVM实现IR指令复算的关键技术问题。 1 如何插入一条指令参考：https://stackoverflow.com/questions/35198935/add-an-llvm-instruction 12345678BasicBlock *B = I-&amp;gt;getParent();if (auto *op = dyn_cast&amp;lt;BinaryOperator&amp;gt;(&amp;a">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://ifuleyou.github.io/2018/03/27/LLVMlearning/InstructionClassGraph.jpg">
-<meta property="og:updated_time" content="2018-03-27T14:49:48.764Z">
+<meta property="og:image" content="http://ifuleyou.github.io/2018/03/27/LLVMlearning/BinaryOperatorLayout.jpg">
+<meta property="og:updated_time" content="2018-03-29T03:14:31.762Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="学习LLVM，并实现中间代码级的指令复算">
 <meta name="twitter:description" content="以下记录了通过LLVM实现IR指令复算的关键技术问题。 1 如何插入一条指令参考：https://stackoverflow.com/questions/35198935/add-an-llvm-instruction 12345678BasicBlock *B = I-&amp;gt;getParent();if (auto *op = dyn_cast&amp;lt;BinaryOperator&amp;gt;(&amp;a">
@@ -421,7 +422,7 @@
                 
                   <span class="post-meta-item-text">Symbols count in article&#58;</span>
                 
-                <span title="Symbols count in article">2.5k</span>
+                <span title="Symbols count in article">4.3k</span>
               
 
               
@@ -435,7 +436,7 @@
                 
                   <span class="post-meta-item-text">Reading time &asymp;</span>
                 
-                <span title="Reading time">0:02</span>
+                <span title="Reading time">0:04</span>
               
             </div>
           
@@ -470,7 +471,7 @@
 <p>上面给出了几个很好的总结。</p>
 <ul>
 <li><p>Instruction 有多少子类</p>
-<p>在<a href="http://llvm.org/doxygen/classllvm_1_1Instruction.html中，有Instruction的继承关系，可以看到Instruction所有的子类" target="_blank" rel="noopener">http://llvm.org/doxygen/classllvm_1_1Instruction.html中，有Instruction的继承关系，可以看到Instruction所有的子类</a></p>
+<p>在<a href="http://llvm.org/doxygen/classllvm_1_1Instruction.html" target="_blank" rel="noopener">http://llvm.org/doxygen/classllvm_1_1Instruction.html</a>    中，有Instruction的继承关系，可以看到Instruction所有的子类</p>
 <p><img src="InstructionClassGraph.jpg" alt="InstructionClassGraph.jpg"></p>
 </li>
 <li><p>查询每个指令具体属于的操作码，如对于BinaryOperator，具体是ADD还是SUB</p>
@@ -489,7 +490,21 @@
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;Value*&gt; llfiindex(<span class="number">1</span>);</span><br><span class="line">llfiindex[<span class="number">0</span>] = ConstantInt::get(Type::getInt64Ty(context), fi_index++);</span><br><span class="line">MDNode *mdnode = MDNode::get(context, llfiindex);</span><br><span class="line">inst-&gt;setMetadata(<span class="string">"mxk"</span>, mdnode);</span><br></pre></td></tr></table></figure>
 <p>删除一条指令的Metadata</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Instruction *temp = inst-&gt;clone();</span><br><span class="line">temp-&gt;setMetadata(<span class="string">"llfi_index"</span>, <span class="literal">NULL</span>);</span><br></pre></td></tr></table></figure>
-<h2 id="4-复算实现"><a href="#4-复算实现" class="headerlink" title="4. 复算实现"></a>4. 复算实现</h2><p>针对不同的指令，进行不同的操作。</p>
+<h2 id="4-如何更新复算指令的引用"><a href="#4-如何更新复算指令的引用" class="headerlink" title="4. 如何更新复算指令的引用"></a>4. 如何更新复算指令的引用</h2><p>为实现代码复算，我们需要为复算指令增加引用，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%mul = mul nsw i32 %8, %10 原始指令</span><br><span class="line">%mul10 = mul nsw i32 %9, %11 副本指令，其use的数据都要更新为原始指令中use数据的副本</span><br></pre></td></tr></table></figure>
+<p>为此，我们需要获取每个每个副本指令中需要更新的use数据的信息。</p>
+<p>在llvm中，由于采用SSA，所有的数据只会被赋值一次，而且，在数据结构上，所有的数据指针(Value <em>)都是一个指向该数据的指令(Instruction </em>)，注意：Instruction继承自Value和Use。</p>
+<p>所以，解决更新副本指令引用的关键，就是找到每个指令所use的数据的副本数据。我们在每条指令的复算过程中，都将原始数据指针（也就是原始指令指针）与副本数据指针（也就是副本数据指针）之间的映射关系存放到map中，这样，我们只需要找到每个指令的所有引用就足以解决问题了。</p>
+<p>llvm的每条指令都存储了def-use信息，结构如下：<br> <img src="BinaryOperatorLayout.jpg" alt="BinaryOperatorLayout.jpg"></p>
+<p>对于一个Instruction inst，可以获取其operator的iterator，并且通过for循环遍历之。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (User::op_iterator opIterator = temp-&gt;op_begin(); opIterator != temp-&gt;op_end(); opIterator++) &#123;</span><br><span class="line">  <span class="comment">//....</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同时，Use类中，还有一个方法：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="comment">/// Normally Use will just implicitly convert to a Value* that it holds.</span></span><br><span class="line">  <span class="keyword">operator</span> Value*() <span class="keyword">const</span> &#123; <span class="keyword">return</span> Val; &#125;</span><br></pre></td></tr></table></figure>
+<p>也就是说，Use的值会自动转换成一个Value的指针。</p>
+<p>所以，我们可以通过opIterator来获取当前指令的所有引用信息。</p>
+<p>实现复算和更新副本指令引用的代码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">BasicBlock *B = inst-&gt;getParent();</span><br><span class="line"></span><br><span class="line">Instruction *temp = inst-&gt;clone();</span><br><span class="line">temp-&gt;setMetadata(<span class="string">"llfi_index"</span>, <span class="literal">NULL</span>);</span><br><span class="line">shadow_value_map.insert(<span class="built_in">std</span>::make_pair&lt;Value*, Value*&gt;(inst, temp));</span><br><span class="line"></span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;Value*&gt; Elts(<span class="number">1</span>);</span><br><span class="line"><span class="keyword">for</span> (User::op_iterator opIterator = temp-&gt;op_begin(); opIterator != temp-&gt;op_end(); opIterator++) &#123;</span><br><span class="line">  <span class="comment">//Use *newOp = opIterator-&gt;getNext();//the operator's next value should be the duplicated instruction</span></span><br><span class="line">  Value *curOp = *opIterator;</span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">map</span>&lt;Value*, Value*&gt;::iterator it = shadow_value_map.find(curOp);</span><br><span class="line">  <span class="keyword">if</span> (it != shadow_value_map.end()) &#123;</span><br><span class="line"></span><br><span class="line">    Value *newOp = it-&gt;second;</span><br><span class="line">    *opIterator = newOp;</span><br><span class="line">    Elts.push_back(MDString::get(context, newOp-&gt;getName()));</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//*opIterator = *newOp;</span></span><br><span class="line">&#125;</span><br><span class="line">MDNode *Node = MDNode::get(context, Elts);</span><br><span class="line">temp-&gt;setMetadata(<span class="string">"mxk1"</span>, Node);</span><br><span class="line"></span><br><span class="line">B-&gt;getInstList().insertAfter(inst,temp);</span><br><span class="line"><span class="comment">// inst-&gt;replaceAllUsesWith(temp);</span></span><br><span class="line">temp-&gt;setName(inst-&gt;getName());</span><br></pre></td></tr></table></figure>
+<h2 id="5-检查校验"><a href="#5-检查校验" class="headerlink" title="5. 检查校验"></a>5. 检查校验</h2><p>针对不同的指令，进行不同的操作。</p>
 <p>swift：</p>
 <p>AllocaInst，分配内存指针，需要在其后添加对上一寄存器值的复算</p>
 
@@ -704,7 +719,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-如何插入一条指令"><span class="nav-number">1.</span> <span class="nav-text">1 如何插入一条指令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-如何识别扫描到的指令的类型"><span class="nav-number">2.</span> <span class="nav-text">2 如何识别扫描到的指令的类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-如何为指令插入Metadata"><span class="nav-number">3.</span> <span class="nav-text">3. 如何为指令插入Metadata</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-复算实现"><span class="nav-number">4.</span> <span class="nav-text">4. 复算实现</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-如何插入一条指令"><span class="nav-number">1.</span> <span class="nav-text">1 如何插入一条指令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-如何识别扫描到的指令的类型"><span class="nav-number">2.</span> <span class="nav-text">2 如何识别扫描到的指令的类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-如何为指令插入Metadata"><span class="nav-number">3.</span> <span class="nav-text">3. 如何为指令插入Metadata</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-如何更新复算指令的引用"><span class="nav-number">4.</span> <span class="nav-text">4. 如何更新复算指令的引用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-检查校验"><span class="nav-number">5.</span> <span class="nav-text">5. 检查校验</span></a></li></ol></div>
             
 
           </div>
@@ -736,7 +751,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="Symbols count total">10k</span>
+    <span title="Symbols count total">12k</span>
   
 
   
@@ -745,7 +760,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="Reading time total">0:10</span>
+    <span title="Reading time total">0:12</span>
   
 </div>
 
