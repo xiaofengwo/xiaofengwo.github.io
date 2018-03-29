@@ -113,7 +113,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://ifuleyou.github.io/2018/03/27/LLVMlearning/InstructionClassGraph.jpg">
 <meta property="og:image" content="http://ifuleyou.github.io/2018/03/27/LLVMlearning/BinaryOperatorLayout.jpg">
-<meta property="og:updated_time" content="2018-03-29T03:14:31.762Z">
+<meta property="og:updated_time" content="2018-03-29T14:25:09.525Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="学习LLVM，并实现中间代码级的指令复算">
 <meta name="twitter:description" content="以下记录了通过LLVM实现IR指令复算的关键技术问题。 1 如何插入一条指令参考：https://stackoverflow.com/questions/35198935/add-an-llvm-instruction 12345678BasicBlock *B = I-&amp;gt;getParent();if (auto *op = dyn_cast&amp;lt;BinaryOperator&amp;gt;(&amp;a">
@@ -422,7 +422,7 @@
                 
                   <span class="post-meta-item-text">Symbols count in article&#58;</span>
                 
-                <span title="Symbols count in article">4.3k</span>
+                <span title="Symbols count in article">6.7k</span>
               
 
               
@@ -436,7 +436,7 @@
                 
                   <span class="post-meta-item-text">Reading time &asymp;</span>
                 
-                <span title="Reading time">0:04</span>
+                <span title="Reading time">0:07</span>
               
             </div>
           
@@ -471,7 +471,7 @@
 <p>上面给出了几个很好的总结。</p>
 <ul>
 <li><p>Instruction 有多少子类</p>
-<p>在<a href="http://llvm.org/doxygen/classllvm_1_1Instruction.html" target="_blank" rel="noopener">http://llvm.org/doxygen/classllvm_1_1Instruction.html</a>    中，有Instruction的继承关系，可以看到Instruction所有的子类</p>
+<p>在<a href="http://llvm.org/doxygen/classllvm_1_1Instruction.html" target="_blank" rel="noopener">http://llvm.org/doxygen/classllvm_1_1Instruction.html</a> 中，有Instruction的继承关系，可以看到Instruction所有的子类</p>
 <p><img src="InstructionClassGraph.jpg" alt="InstructionClassGraph.jpg"></p>
 </li>
 <li><p>查询每个指令具体属于的操作码，如对于BinaryOperator，具体是ADD还是SUB</p>
@@ -495,6 +495,7 @@
 <p>为此，我们需要获取每个每个副本指令中需要更新的use数据的信息。</p>
 <p>在llvm中，由于采用SSA，所有的数据只会被赋值一次，而且，在数据结构上，所有的数据指针(Value <em>)都是一个指向该数据的指令(Instruction </em>)，注意：Instruction继承自Value和Use。</p>
 <p>所以，解决更新副本指令引用的关键，就是找到每个指令所use的数据的副本数据。我们在每条指令的复算过程中，都将原始数据指针（也就是原始指令指针）与副本数据指针（也就是副本数据指针）之间的映射关系存放到map中，这样，我们只需要找到每个指令的所有引用就足以解决问题了。</p>
+<p>在<a href="https://www.zhihu.com/question/41999500中，给出了很清晰的关于use-def在llvm中如何存储的描述。" target="_blank" rel="noopener">https://www.zhihu.com/question/41999500中，给出了很清晰的关于use-def在llvm中如何存储的描述。</a></p>
 <p>llvm的每条指令都存储了def-use信息，结构如下：<br> <img src="BinaryOperatorLayout.jpg" alt="BinaryOperatorLayout.jpg"></p>
 <p>对于一个Instruction inst，可以获取其operator的iterator，并且通过for循环遍历之。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (User::op_iterator opIterator = temp-&gt;op_begin(); opIterator != temp-&gt;op_end(); opIterator++) &#123;</span><br><span class="line">  <span class="comment">//....</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -504,6 +505,21 @@
 <p>所以，我们可以通过opIterator来获取当前指令的所有引用信息。</p>
 <p>实现复算和更新副本指令引用的代码如下：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">BasicBlock *B = inst-&gt;getParent();</span><br><span class="line"></span><br><span class="line">Instruction *temp = inst-&gt;clone();</span><br><span class="line">temp-&gt;setMetadata(<span class="string">"llfi_index"</span>, <span class="literal">NULL</span>);</span><br><span class="line">shadow_value_map.insert(<span class="built_in">std</span>::make_pair&lt;Value*, Value*&gt;(inst, temp));</span><br><span class="line"></span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;Value*&gt; Elts(<span class="number">1</span>);</span><br><span class="line"><span class="keyword">for</span> (User::op_iterator opIterator = temp-&gt;op_begin(); opIterator != temp-&gt;op_end(); opIterator++) &#123;</span><br><span class="line">  <span class="comment">//Use *newOp = opIterator-&gt;getNext();//the operator's next value should be the duplicated instruction</span></span><br><span class="line">  Value *curOp = *opIterator;</span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">map</span>&lt;Value*, Value*&gt;::iterator it = shadow_value_map.find(curOp);</span><br><span class="line">  <span class="keyword">if</span> (it != shadow_value_map.end()) &#123;</span><br><span class="line"></span><br><span class="line">    Value *newOp = it-&gt;second;</span><br><span class="line">    *opIterator = newOp;</span><br><span class="line">    Elts.push_back(MDString::get(context, newOp-&gt;getName()));</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//*opIterator = *newOp;</span></span><br><span class="line">&#125;</span><br><span class="line">MDNode *Node = MDNode::get(context, Elts);</span><br><span class="line">temp-&gt;setMetadata(<span class="string">"mxk1"</span>, Node);</span><br><span class="line"></span><br><span class="line">B-&gt;getInstList().insertAfter(inst,temp);</span><br><span class="line"><span class="comment">// inst-&gt;replaceAllUsesWith(temp);</span></span><br><span class="line">temp-&gt;setName(inst-&gt;getName());</span><br></pre></td></tr></table></figure>
+<h2 id="5-复算的范围"><a href="#5-复算的范围" class="headerlink" title="5.复算的范围"></a>5.复算的范围</h2><p>除了terminitor以外，全部复算，但会出现一些问题。</p>
+<ul>
+<li><p>PHI节点问题</p>
+</li>
+<li><p>landingpad指令</p>
+<p>这是LLVM中的异常处理机制，在复算检验实现过程中，曾出现过如下异常信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">LandingPadInst not the first non-PHI instruction <span class="keyword">in</span> the block.</span><br><span class="line">  %21 = landingpad &#123; i8*, i32 &#125; personality i8* bitcast (i32 (...)* @__gxx_personality_v0 to i8*)</span><br><span class="line">          cleanup, !mxk1 !2, !mxk !64, !numuses !4</span><br><span class="line">Broken module found, compilation aborted!</span><br><span class="line">0  opt             0x00000000018707fa llvm::sys::PrintStackTrace(_IO_FILE*) + 53</span><br><span class="line">1  opt             0x0000000001870a8a</span><br><span class="line">2  opt             0x0000000001870453</span><br><span class="line">3  libpthread.so.0 0x00007f3b2999f390</span><br><span class="line">4  libc.so.6       0x00007f3b28d58428 gsignal + 56</span><br><span class="line">5  libc.so.6       0x00007f3b28d5a02a abort + 362</span><br><span class="line">6  opt             0x000000000175e9eb</span><br><span class="line">7  opt             0x000000000175e69f</span><br><span class="line">8  opt             0x0000000001734ff8 llvm::FPPassManager::runOnFunction(llvm::Function&amp;) + 330</span><br><span class="line">9  opt             0x000000000173516e llvm::FPPassManager::runOnModule(llvm::Module&amp;) + 120</span><br><span class="line">10 opt             0x000000000173546e</span><br><span class="line">11 opt             0x0000000001735966 llvm::legacy::PassManagerImpl::run(llvm::Module&amp;) + 262</span><br><span class="line">12 opt             0x0000000001735b3f llvm::legacy::PassManager::run(llvm::Module&amp;) + 39</span><br><span class="line">13 opt             0x00000000008f3828 main + 5804</span><br><span class="line">14 libc.so.6       0x00007f3b28d43830 __libc_start_main + 240</span><br><span class="line">15 opt             0x00000000008e4ef9 _start + 41</span><br><span class="line">Stack dump:</span><br><span class="line">0.	Program arguments: /home/xiaofengwo/llvm/llvm-3.4/build/bin/opt -load /home/xiaofengwo/llvm/ir_sihft_llvm_build/bin/../llvm_passes/llfi-passes.so -insttracepass -maxtrace 250 -o /home/xiaofengwo/llvm/llvm-workspace/sample_programs/kakadu_source_flat/llfi/a-profiling.ll /home/xiaofengwo/llvm/llvm-workspace/sample_programs/kakadu_source_flat/llfi/a-llfi_index.ll -S </span><br><span class="line">1.	Running pass <span class="string">'Function Pass Manager'</span> on module <span class="string">'/home/xiaofengwo/llvm/llvm-workspace/sample_programs/kakadu_source_flat/llfi/a-llfi_index.ll'</span>.</span><br><span class="line">2.	Running pass <span class="string">'Module Verifier'</span> on <span class="keyword">function</span> <span class="string">'@_ZN13kdu_synthesisC2E14kdu_resolutionP20kdu_sample_allocatorbf'</span></span><br><span class="line">Aborted (core dumped)</span><br></pre></td></tr></table></figure>
+<p>landingpad 貌似只能是每个基本块的第一条non-PHI指令。因此，我们把landingpad暂时移出复算域。</p>
+</li>
+<li><p>call指令</p>
+<p>如果对call指令也进行2遍调用，会在执行的时候报段错误，可能是由于每调用一次都产生两遍副本，对于最底层的函数调用次数过多导致的。</p>
+<p>如果对call指令仅调用1遍，而后对其define的副本进行同步，则有可能导致call指令引用的变量所指向的内存单元仅在原始变量中是有效的，即如果call指令所引用的变量是指针，那么调用过call指令后，副本指针所指向的位置可能没有值。但由于副本指针和原始指针指向同一位置，如果有对这块地址的修改操作，恐怕会有问题。</p>
+<p>​</p>
+</li>
+</ul>
 <h2 id="5-检查校验"><a href="#5-检查校验" class="headerlink" title="5. 检查校验"></a>5. 检查校验</h2><p>针对不同的指令，进行不同的操作。</p>
 <p>swift：</p>
 <p>AllocaInst，分配内存指针，需要在其后添加对上一寄存器值的复算</p>
@@ -719,7 +735,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-如何插入一条指令"><span class="nav-number">1.</span> <span class="nav-text">1 如何插入一条指令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-如何识别扫描到的指令的类型"><span class="nav-number">2.</span> <span class="nav-text">2 如何识别扫描到的指令的类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-如何为指令插入Metadata"><span class="nav-number">3.</span> <span class="nav-text">3. 如何为指令插入Metadata</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-如何更新复算指令的引用"><span class="nav-number">4.</span> <span class="nav-text">4. 如何更新复算指令的引用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-检查校验"><span class="nav-number">5.</span> <span class="nav-text">5. 检查校验</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-如何插入一条指令"><span class="nav-number">1.</span> <span class="nav-text">1 如何插入一条指令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-如何识别扫描到的指令的类型"><span class="nav-number">2.</span> <span class="nav-text">2 如何识别扫描到的指令的类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-如何为指令插入Metadata"><span class="nav-number">3.</span> <span class="nav-text">3. 如何为指令插入Metadata</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-如何更新复算指令的引用"><span class="nav-number">4.</span> <span class="nav-text">4. 如何更新复算指令的引用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-复算的范围"><span class="nav-number">5.</span> <span class="nav-text">5.复算的范围</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-检查校验"><span class="nav-number">6.</span> <span class="nav-text">5. 检查校验</span></a></li></ol></div>
             
 
           </div>
@@ -751,7 +767,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="Symbols count total">12k</span>
+    <span title="Symbols count total">14k</span>
   
 
   
@@ -760,7 +776,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="Reading time total">0:12</span>
+    <span title="Reading time total">0:14</span>
   
 </div>
 
