@@ -113,7 +113,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://ifuleyou.github.io/2018/03/27/LLVMlearning/InstructionClassGraph.jpg">
 <meta property="og:image" content="http://ifuleyou.github.io/2018/03/27/LLVMlearning/BinaryOperatorLayout.jpg">
-<meta property="og:updated_time" content="2018-03-29T14:25:09.525Z">
+<meta property="og:updated_time" content="2018-03-30T14:55:07.939Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="学习LLVM，并实现中间代码级的指令复算">
 <meta name="twitter:description" content="以下记录了通过LLVM实现IR指令复算的关键技术问题。 1 如何插入一条指令参考：https://stackoverflow.com/questions/35198935/add-an-llvm-instruction 12345678BasicBlock *B = I-&amp;gt;getParent();if (auto *op = dyn_cast&amp;lt;BinaryOperator&amp;gt;(&amp;a">
@@ -422,7 +422,7 @@
                 
                   <span class="post-meta-item-text">Symbols count in article&#58;</span>
                 
-                <span title="Symbols count in article">6.7k</span>
+                <span title="Symbols count in article">7.1k</span>
               
 
               
@@ -517,12 +517,18 @@
 <li><p>call指令</p>
 <p>如果对call指令也进行2遍调用，会在执行的时候报段错误，可能是由于每调用一次都产生两遍副本，对于最底层的函数调用次数过多导致的。</p>
 <p>如果对call指令仅调用1遍，而后对其define的副本进行同步，则有可能导致call指令引用的变量所指向的内存单元仅在原始变量中是有效的，即如果call指令所引用的变量是指针，那么调用过call指令后，副本指针所指向的位置可能没有值。但由于副本指针和原始指针指向同一位置，如果有对这块地址的修改操作，恐怕会有问题。</p>
-<p>​</p>
+<p>在EDDI算法中，也无法解决call指令的问题，无论是调用之后再进行同步，还是调用call指令2遍，都不能自动化实现对于黑盒函数调用之后的数据一致性问题。</p>
+<p><u>Todo：考虑对函数进行分析，确定函数是否可以被调用2遍的角度，实现真正的EDDI算法。</u></p>
+</li>
+<li><p>StoreInst和AllocaInst</p>
+<p>在EDDI算法中，应该对二者进行复算，但由于call指令的潜在威胁，暂时无法实现完全的EDDI算法，只能实现针对寄存器的SWIFT算法。StoreInst 和 AllocaInst 指令不参与复算。</p>
 </li>
 </ul>
-<h2 id="5-检查校验"><a href="#5-检查校验" class="headerlink" title="5. 检查校验"></a>5. 检查校验</h2><p>针对不同的指令，进行不同的操作。</p>
-<p>swift：</p>
-<p>AllocaInst，分配内存指针，需要在其后添加对上一寄存器值的复算</p>
+<h2 id="6-检查校验"><a href="#6-检查校验" class="headerlink" title="6. 检查校验"></a>6. 检查校验</h2><p>对于SWIFT算法，校验点插在StoreInst和CallInst，以及branch指令前。</p>
+<p>校验点包括比较和跳转，比较指令比较下一条存储或者函数调用将要用到的变量，跳转指令根据比较结果，选择继续执行还是跳转到最后。</p>
+<p>但插入跳转指令，会导致基本块结构的调整，在同一个pass里面，遍历时由于跳转，会破坏该结构，因此，暂时采用插入校验函数的方法，比较低效。</p>
+<p><u>Todo：后期将加入重新对基本块进行调整的机制。</u></p>
+<p>每次拆分基本块后，重新从头开始扫描指令可以解决问题，但十分低效，需要一种快速调整iterator并指向当前处理指令的方法。</p>
 
       
     </div>
@@ -735,7 +741,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-如何插入一条指令"><span class="nav-number">1.</span> <span class="nav-text">1 如何插入一条指令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-如何识别扫描到的指令的类型"><span class="nav-number">2.</span> <span class="nav-text">2 如何识别扫描到的指令的类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-如何为指令插入Metadata"><span class="nav-number">3.</span> <span class="nav-text">3. 如何为指令插入Metadata</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-如何更新复算指令的引用"><span class="nav-number">4.</span> <span class="nav-text">4. 如何更新复算指令的引用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-复算的范围"><span class="nav-number">5.</span> <span class="nav-text">5.复算的范围</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-检查校验"><span class="nav-number">6.</span> <span class="nav-text">5. 检查校验</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-如何插入一条指令"><span class="nav-number">1.</span> <span class="nav-text">1 如何插入一条指令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-如何识别扫描到的指令的类型"><span class="nav-number">2.</span> <span class="nav-text">2 如何识别扫描到的指令的类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-如何为指令插入Metadata"><span class="nav-number">3.</span> <span class="nav-text">3. 如何为指令插入Metadata</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-如何更新复算指令的引用"><span class="nav-number">4.</span> <span class="nav-text">4. 如何更新复算指令的引用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-复算的范围"><span class="nav-number">5.</span> <span class="nav-text">5.复算的范围</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-检查校验"><span class="nav-number">6.</span> <span class="nav-text">6. 检查校验</span></a></li></ol></div>
             
 
           </div>
@@ -767,7 +773,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="Symbols count total">14k</span>
+    <span title="Symbols count total">15k</span>
   
 
   
@@ -776,7 +782,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="Reading time total">0:14</span>
+    <span title="Reading time total">0:15</span>
   
 </div>
 
