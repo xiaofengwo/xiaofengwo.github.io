@@ -113,7 +113,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://ifuleyou.github.io/2018/03/27/LLVMlearning/InstructionClassGraph.jpg">
 <meta property="og:image" content="http://ifuleyou.github.io/2018/03/27/LLVMlearning/BinaryOperatorLayout.jpg">
-<meta property="og:updated_time" content="2018-03-30T14:55:07.939Z">
+<meta property="og:updated_time" content="2018-03-31T07:44:07.022Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="学习LLVM，并实现中间代码级的指令复算">
 <meta name="twitter:description" content="以下记录了通过LLVM实现IR指令复算的关键技术问题。 1 如何插入一条指令参考：https://stackoverflow.com/questions/35198935/add-an-llvm-instruction 12345678BasicBlock *B = I-&amp;gt;getParent();if (auto *op = dyn_cast&amp;lt;BinaryOperator&amp;gt;(&amp;a">
@@ -422,7 +422,7 @@
                 
                   <span class="post-meta-item-text">Symbols count in article&#58;</span>
                 
-                <span title="Symbols count in article">7.1k</span>
+                <span title="Symbols count in article">7.5k</span>
               
 
               
@@ -436,7 +436,7 @@
                 
                   <span class="post-meta-item-text">Reading time &asymp;</span>
                 
-                <span title="Reading time">0:07</span>
+                <span title="Reading time">0:08</span>
               
             </div>
           
@@ -529,6 +529,37 @@
 <p>但插入跳转指令，会导致基本块结构的调整，在同一个pass里面，遍历时由于跳转，会破坏该结构，因此，暂时采用插入校验函数的方法，比较低效。</p>
 <p><u>Todo：后期将加入重新对基本块进行调整的机制。</u></p>
 <p>每次拆分基本块后，重新从头开始扫描指令可以解决问题，但十分低效，需要一种快速调整iterator并指向当前处理指令的方法。</p>
+<p>可选的方法：</p>
+<table>
+<thead>
+<tr>
+<th>可用方法</th>
+<th>是否已尝试</th>
+<th>结果</th>
+<th>分析</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>比对之后，结果存于cmp变量中，插入具有比对功能的函数调用</td>
+<td>未尝试</td>
+<td></td>
+<td>方法简单，不需要重新划分基本块，不存在iterator失效问题，但执行时性能较差且出错窗口较大</td>
+</tr>
+<tr>
+<td>比对之后，结果存于cmp变量中，在当前指令拆分基本块，并插入br rror_detection指令</td>
+<td>已尝试</td>
+<td>报错，“Instruction does not dominate all uses!”</td>
+<td>每次拆分基本块，会是iterator失效，只能重新获取iterator，效率很低。且函数尾部的error_detection标签所处基本块，原本为unreachable，被某处br到后，原本的ret语句不知为何，报错。</td>
+</tr>
+<tr>
+<td>比对之后，结果存于cmp变量中，在当前指令拆分基本块，并插入if-then-else，在then中插入错误处理函数</td>
+<td></td>
+<td></td>
+<td>每次拆分基本块，会是iterator失效，只能重新获取iterator，效率很低。</td>
+</tr>
+</tbody>
+</table>
 
       
     </div>
