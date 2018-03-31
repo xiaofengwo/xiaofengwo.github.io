@@ -347,7 +347,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/03/27/LLVMlearning/" itemprop="url">学习LLVM，并实现中间代码级的指令复算</a></h1>
+                <a class="post-title-link" href="/2018/03/27/LLVMlearning/" itemprop="url">逐步实现LLVM下的自动软加固工具</a></h1>
         
 
         <div class="post-meta">
@@ -387,7 +387,7 @@
 
           
           
-             <span id="/2018/03/27/LLVMlearning/" class="leancloud_visitors" data-flag-title="学习LLVM，并实现中间代码级的指令复算">
+             <span id="/2018/03/27/LLVMlearning/" class="leancloud_visitors" data-flag-title="逐步实现LLVM下的自动软加固工具">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -412,7 +412,7 @@
                 
                   <span class="post-meta-item-text">Symbols count in article&#58;</span>
                 
-                <span title="Symbols count in article">7.5k</span>
+                <span title="Symbols count in article">13k</span>
               
 
               
@@ -426,7 +426,7 @@
                 
                   <span class="post-meta-item-text">Reading time &asymp;</span>
                 
-                <span title="Reading time">0:08</span>
+                <span title="Reading time">0:13</span>
               
             </div>
           
@@ -448,9 +448,9 @@
       
         
           
-          以下记录了通过LLVM实现IR指令复算的关键技术问题。
+          指令复算是软件容错的基本方法，自动软加固工具和故障注入工具在软加固研究中几乎必不可少，本文随笔者工作进度，逐步完成一个利用LLVM实现的自动软加固工具。将会记录实现面临的关键技术，及开发过程中遇到的细节问题。
 1 如何插入一条指令参考：https://stackoverflow.com/questions/35198935/add-an-llvm-instruction
-12345678BasicBlock *B = I-&gt;getParent();if (auto *op = dyn_cast&lt;BinaryOperator&gt;(&amp;*I)) &#123;    auto temp = op-&gt;clone();    B
+12345678BasicBlock *B = I-&gt;getParent();if (auto *op = dyn_ca
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -1450,7 +1450,7 @@ Anaconda官方网站
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="Symbols count total">15k</span>
+    <span title="Symbols count total">20k</span>
   
 
   
@@ -1459,7 +1459,7 @@ Anaconda官方网站
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="Reading time total">0:15</span>
+    <span title="Reading time total">0:20</span>
   
 </div>
 

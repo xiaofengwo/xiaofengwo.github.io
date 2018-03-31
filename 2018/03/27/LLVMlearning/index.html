@@ -103,20 +103,20 @@
   <meta name="keywords" content="学术," />
 
 
-<meta name="description" content="以下记录了通过LLVM实现IR指令复算的关键技术问题。 1 如何插入一条指令参考：https://stackoverflow.com/questions/35198935/add-an-llvm-instruction 12345678BasicBlock *B = I-&amp;gt;getParent();if (auto *op = dyn_cast&amp;lt;BinaryOperator&amp;gt;(&amp;a">
+<meta name="description" content="指令复算是软件容错的基本方法，自动软加固工具和故障注入工具在软加固研究中几乎必不可少，本文随笔者工作进度，逐步完成一个利用LLVM实现的自动软加固工具。将会记录实现面临的关键技术，及开发过程中遇到的细节问题。 1 如何插入一条指令参考：https://stackoverflow.com/questions/35198935/add-an-llvm-instruction 12345678Basic">
 <meta name="keywords" content="学术">
 <meta property="og:type" content="article">
-<meta property="og:title" content="学习LLVM，并实现中间代码级的指令复算">
+<meta property="og:title" content="逐步实现LLVM下的自动软加固工具">
 <meta property="og:url" content="http://ifuleyou.github.io/2018/03/27/LLVMlearning/index.html">
 <meta property="og:site_name" content="民科小屋">
-<meta property="og:description" content="以下记录了通过LLVM实现IR指令复算的关键技术问题。 1 如何插入一条指令参考：https://stackoverflow.com/questions/35198935/add-an-llvm-instruction 12345678BasicBlock *B = I-&amp;gt;getParent();if (auto *op = dyn_cast&amp;lt;BinaryOperator&amp;gt;(&amp;a">
+<meta property="og:description" content="指令复算是软件容错的基本方法，自动软加固工具和故障注入工具在软加固研究中几乎必不可少，本文随笔者工作进度，逐步完成一个利用LLVM实现的自动软加固工具。将会记录实现面临的关键技术，及开发过程中遇到的细节问题。 1 如何插入一条指令参考：https://stackoverflow.com/questions/35198935/add-an-llvm-instruction 12345678Basic">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://ifuleyou.github.io/2018/03/27/LLVMlearning/InstructionClassGraph.jpg">
 <meta property="og:image" content="http://ifuleyou.github.io/2018/03/27/LLVMlearning/BinaryOperatorLayout.jpg">
-<meta property="og:updated_time" content="2018-03-31T07:44:07.022Z">
+<meta property="og:updated_time" content="2018-03-31T11:50:44.942Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="学习LLVM，并实现中间代码级的指令复算">
-<meta name="twitter:description" content="以下记录了通过LLVM实现IR指令复算的关键技术问题。 1 如何插入一条指令参考：https://stackoverflow.com/questions/35198935/add-an-llvm-instruction 12345678BasicBlock *B = I-&amp;gt;getParent();if (auto *op = dyn_cast&amp;lt;BinaryOperator&amp;gt;(&amp;a">
+<meta name="twitter:title" content="逐步实现LLVM下的自动软加固工具">
+<meta name="twitter:description" content="指令复算是软件容错的基本方法，自动软加固工具和故障注入工具在软加固研究中几乎必不可少，本文随笔者工作进度，逐步完成一个利用LLVM实现的自动软加固工具。将会记录实现面临的关键技术，及开发过程中遇到的细节问题。 1 如何插入一条指令参考：https://stackoverflow.com/questions/35198935/add-an-llvm-instruction 12345678Basic">
 <meta name="twitter:image" content="http://ifuleyou.github.io/2018/03/27/LLVMlearning/InstructionClassGraph.jpg">
 
 
@@ -133,7 +133,7 @@
     sidebar: "",
   };
 </script>
-  <title>学习LLVM，并实现中间代码级的指令复算 | 民科小屋</title>
+  <title>逐步实现LLVM下的自动软加固工具 | 民科小屋</title>
   
 
 
@@ -352,7 +352,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">学习LLVM，并实现中间代码级的指令复算</h1>
+          <h1 class="post-title" itemprop="name headline">逐步实现LLVM下的自动软加固工具</h1>
         
 
         <div class="post-meta">
@@ -392,7 +392,7 @@
 
           
           
-             <span id="/2018/03/27/LLVMlearning/" class="leancloud_visitors" data-flag-title="学习LLVM，并实现中间代码级的指令复算">
+             <span id="/2018/03/27/LLVMlearning/" class="leancloud_visitors" data-flag-title="逐步实现LLVM下的自动软加固工具">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -422,7 +422,7 @@
                 
                   <span class="post-meta-item-text">Symbols count in article&#58;</span>
                 
-                <span title="Symbols count in article">7.5k</span>
+                <span title="Symbols count in article">13k</span>
               
 
               
@@ -436,7 +436,7 @@
                 
                   <span class="post-meta-item-text">Reading time &asymp;</span>
                 
-                <span title="Reading time">0:08</span>
+                <span title="Reading time">0:13</span>
               
             </div>
           
@@ -456,10 +456,23 @@
       
 
       
-        <p>以下记录了通过LLVM实现IR指令复算的关键技术问题。</p>
+        <p>指令复算是软件容错的基本方法，自动软加固工具和故障注入工具在软加固研究中几乎必不可少，本文随笔者工作进度，逐步完成一个利用LLVM实现的自动软加固工具。将会记录实现面临的关键技术，及开发过程中遇到的细节问题。</p>
 <h2 id="1-如何插入一条指令"><a href="#1-如何插入一条指令" class="headerlink" title="1 如何插入一条指令"></a>1 如何插入一条指令</h2><p>参考：<a href="https://stackoverflow.com/questions/35198935/add-an-llvm-instruction" target="_blank" rel="noopener">https://stackoverflow.com/questions/35198935/add-an-llvm-instruction</a></p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">BasicBlock *B = I-&gt;getParent();</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">auto</span> *op = dyn_cast&lt;BinaryOperator&gt;(&amp;*I)) </span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">auto</span> temp = op-&gt;clone();</span><br><span class="line">    B-&gt;getInstList().insert(op, temp);</span><br><span class="line">    temp-&gt;setName(op-&gt;getName());</span><br><span class="line">    op-&gt;replaceAllUsesWith(temp); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>其中，I是Instruction，BinaryOperator是Instruction的子类。</p>
+<p>各种不同的类型的指令，其插入方式各有不同，上面是针对所有指令的直接clone()，该操作除了没有复制指令所在的位置以外，全部copy原始指令的信息，包括use信息，这是实现复算的最便捷的方式，但我们仍然需要插入一些比对、跳转、函数调用等指令，这些指令大多都提供了相应的Create方法，只要有相应的示例，学习起来并不困难。</p>
+<ul>
+<li><p>CmpInst</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Value *newOp = it-&gt;second;</span><br><span class="line">CmpInst *cmp = CmpInst::Create(Instruction::ICmp, CmpInst::ICMP_NE, it-&gt;first, it-&gt;second, <span class="string">"eddi_check"</span>, inst);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>CallInst</p>
+<p>无参数的call</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">BB-&gt;getInstList().insertAfter(BB-&gt;begin(),newret);</span><br><span class="line">FunctionType *error_handle_func_type = FunctionType::get(Type::getVoidTy(context), <span class="literal">false</span>); </span><br><span class="line">Constant *error_handling_func = F.getParent()-&gt;getOrInsertFunction(<span class="string">"error_handling"</span>,</span><br><span class="line">                                                                   error_handle_func_type);</span><br><span class="line">CallInst::Create(error_handling_func, <span class="string">""</span>, BB-&gt;begin());</span><br></pre></td></tr></table></figure>
+<p>有参数的call</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;Type*&gt; parameterVector(<span class="number">1</span>);</span><br><span class="line">parameterVector[<span class="number">0</span>] = Type::getInt32Ty(context); <span class="comment">//ID</span></span><br><span class="line">ArrayRef&lt;Type*&gt; parameterVector_array_ref(parameterVector);</span><br><span class="line"></span><br><span class="line">FunctionType *exit_func_type = FunctionType::get(Type::getVoidTy(context),parameterVector_array_ref, <span class="literal">false</span>); </span><br><span class="line">Constant *exit_func = F.getParent()-&gt;getOrInsertFunction(<span class="string">"exit"</span>, exit_func_type);</span><br><span class="line"></span><br><span class="line">Value *one = ConstantInt::get(Type::getInt32Ty(context),<span class="number">1</span>);</span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;Value*&gt; exitArgs;</span><br><span class="line">exitArgs.push_back(one);</span><br><span class="line"></span><br><span class="line">ArrayRef&lt;Value*&gt; exitArgs_array_ref(exitArgs);</span><br><span class="line"></span><br><span class="line"><span class="comment">//Create the Function</span></span><br><span class="line">CallInst::Create(exit_func, exitArgs_array_ref, <span class="string">""</span>, BB-&gt;end());</span><br></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+</ul>
 <h2 id="2-如何识别扫描到的指令的类型"><a href="#2-如何识别扫描到的指令的类型" class="headerlink" title="2 如何识别扫描到的指令的类型"></a>2 如何识别扫描到的指令的类型</h2><p>参考：<a href="https://stackoverflow.com/questions/30250289/how-to-check-the-opcode-of-an-instruction" target="_blank" rel="noopener">https://stackoverflow.com/questions/30250289/how-to-check-the-opcode-of-an-instruction</a></p>
 <blockquote>
 <p>5<a href="">down vote</a>accepted</p>
@@ -526,7 +539,21 @@
 </ul>
 <h2 id="6-检查校验"><a href="#6-检查校验" class="headerlink" title="6. 检查校验"></a>6. 检查校验</h2><p>对于SWIFT算法，校验点插在StoreInst和CallInst，以及branch指令前。</p>
 <p>校验点包括比较和跳转，比较指令比较下一条存储或者函数调用将要用到的变量，跳转指令根据比较结果，选择继续执行还是跳转到最后。</p>
-<p>但插入跳转指令，会导致基本块结构的调整，在同一个pass里面，遍历时由于跳转，会破坏该结构，因此，暂时采用插入校验函数的方法，比较低效。</p>
+<ul>
+<li>比较指令</li>
+</ul>
+<p>比较指令分为ICmpInst和FCmpInst，要按照操作数的类型而调整使用的比较指令类型。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (it-&gt;first-&gt;getType()-&gt;isIntOrIntVectorTy() || it-&gt;first-&gt;getType()-&gt;isPtrOrPtrVectorTy()) &#123;</span><br><span class="line">  <span class="comment">// if (!isa&lt;llvm::IntegerType&gt;(it-&gt;first-&gt;getType())) &#123;</span></span><br><span class="line">  cmp = CmpInst::Create(Instruction::ICmp, CmpInst::ICMP_NE, it-&gt;first, it-&gt;second, <span class="string">"eddi_check"</span>, inst);</span><br><span class="line"></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  cmp = CmpInst::Create(Instruction::FCmp, CmpInst::FCMP_UNE, it-&gt;first, it-&gt;second, <span class="string">"eddi_check"</span>, inst);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中，it是操作数的迭代器。</p>
+<p>然而，按照以上代码，在对br指令之前的副本变量进行校验的时候，会有部分指令报错</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">/home/xiaofengwo/llvm/llvm<span class="number">-3.4</span>/build/bin/opt -load /home/xiaofengwo/llvm/ir_sihft_llvm_build/bin/../llvm_passes/llfi-passes.so -insttracepass -maxtrace <span class="number">250</span> -o /home/xiaofengwo/llvm/llvm-workspace/sample_programs/kakadu_source_flat/llfi/a-profiling.ll /home/xiaofengwo/llvm/llvm-workspace/sample_programs/kakadu_source_flat/llfi/a-llfi_index.ll -S</span><br><span class="line">Invalid operand types <span class="keyword">for</span> FCmp instruction</span><br><span class="line">  %eddi_check24 = fcmp une &#123; i8*, i32 &#125; %lpad.val3, %lpad.val323</span><br><span class="line">Invalid operand types <span class="keyword">for</span> FCmp instruction</span><br><span class="line">  %eddi_check25 = fcmp une &#123; i8*, i32 &#125; %lpad.val3, %lpad.val323</span><br><span class="line">Broken <span class="keyword">module</span> found, compilation aborted!</span><br><span class="line"><span class="number">0</span>  opt             <span class="number">0x00000000018707fa</span> llvm::sys::PrintStackTrace(_IO_FILE*) + <span class="number">53</span></span><br><span class="line"><span class="number">1</span>  opt             <span class="number">0x0000000001870a8a</span></span><br><span class="line"><span class="number">2</span>  opt             <span class="number">0x0000000001870453</span></span><br><span class="line"><span class="number">3</span>  libpthread.so<span class="number">.0</span> <span class="number">0x00007f1b3f340390</span></span><br><span class="line"><span class="number">4</span>  libc.so<span class="number">.6</span>       <span class="number">0x00007f1b3e6f9428</span> gsignal + <span class="number">56</span></span><br><span class="line"><span class="number">5</span>  libc.so<span class="number">.6</span>       <span class="number">0x00007f1b3e6fb02a</span> <span class="built_in">abort</span> + <span class="number">362</span></span><br><span class="line"><span class="number">6</span>  opt             <span class="number">0x000000000175e9eb</span></span><br><span class="line"><span class="number">7</span>  opt             <span class="number">0x000000000175e69f</span></span><br><span class="line"><span class="number">8</span>  opt             <span class="number">0x0000000001734ff8</span> llvm::FPPassManager::runOnFunction(llvm::Function&amp;) + <span class="number">330</span></span><br><span class="line"><span class="number">9</span>  opt             <span class="number">0x000000000173516e</span> llvm::FPPassManager::runOnModule(llvm::Module&amp;) + <span class="number">120</span></span><br><span class="line"><span class="number">10</span> opt             <span class="number">0x000000000173546e</span></span><br><span class="line"><span class="number">11</span> opt             <span class="number">0x0000000001735966</span> llvm::legacy::PassManagerImpl::run(llvm::Module&amp;) + <span class="number">262</span></span><br><span class="line"><span class="number">12</span> opt             <span class="number">0x0000000001735b3f</span> llvm::legacy::PassManager::run(llvm::Module&amp;) + <span class="number">39</span></span><br><span class="line"><span class="number">13</span> opt             <span class="number">0x00000000008f3828</span> main + <span class="number">5804</span></span><br><span class="line"><span class="number">14</span> libc.so<span class="number">.6</span>       <span class="number">0x00007f1b3e6e4830</span> __libc_start_main + <span class="number">240</span></span><br><span class="line"><span class="number">15</span> opt             <span class="number">0x00000000008e4ef9</span> _start + <span class="number">41</span></span><br><span class="line">Stack dump:</span><br><span class="line"><span class="number">0.</span>	Program arguments: /home/xiaofengwo/llvm/llvm<span class="number">-3.4</span>/build/bin/opt -load /home/xiaofengwo/llvm/ir_sihft_llvm_build/bin/../llvm_passes/llfi-passes.so -insttracepass -maxtrace <span class="number">250</span> -o /home/xiaofengwo/llvm/llvm-workspace/sample_programs/kakadu_source_flat/llfi/a-profiling.ll /home/xiaofengwo/llvm/llvm-workspace/sample_programs/kakadu_source_flat/llfi/a-llfi_index.ll -S </span><br><span class="line">1.	Running pass 'Function Pass Manager' on module '/home/xiaofengwo/llvm/llvm-workspace/sample_programs/kakadu_source_flat/llfi/a-llfi_index.ll'.</span><br><span class="line">2.	Running pass 'Module Verifier' on function '@_ZN13kdu_synthesisC2E14kdu_resolutionP20kdu_sample_allocatorbf'</span><br><span class="line">Aborted (core dumped)</span><br></pre></td></tr></table></figure>
+<p>这就奇怪了，原本以为CmpInst只有ICmpInst和FCmpInst，但上面这种两种都不适用，就不知道怎么回事了。</p>
+<p>只好暂时不管这些特殊的类型。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (it-&gt;first-&gt;getType()-&gt;isIntOrIntVectorTy() || it-&gt;first-&gt;getType()-&gt;isPtrOrPtrVectorTy()) &#123;</span><br><span class="line">  <span class="comment">// if (!isa&lt;llvm::IntegerType&gt;(it-&gt;first-&gt;getType())) &#123;</span></span><br><span class="line">  cmp = CmpInst::Create(Instruction::ICmp, CmpInst::ICMP_NE, it-&gt;first, it-&gt;second, <span class="string">"eddi_check"</span>, inst);</span><br><span class="line"></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (it-&gt;first-&gt;getType()-&gt;isFPOrFPVectorTy()) &#123;</span><br><span class="line">  cmp = CmpInst::Create(Instruction::FCmp, CmpInst::FCMP_UNE, it-&gt;first, it-&gt;second, <span class="string">"eddi_check"</span>, inst);</span><br><span class="line"></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="keyword">continue</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>跳转指令</li>
+</ul>
+<p>插入跳转指令，会导致基本块结构的调整，在同一个pass里面，遍历时由于跳转，会破坏该结构，因此，暂时采用插入校验函数的方法，比较低效。</p>
 <p><u>Todo：后期将加入重新对基本块进行调整的机制。</u></p>
 <p>每次拆分基本块后，重新从头开始扫描指令可以解决问题，但十分低效，需要一种快速调整iterator并指向当前处理指令的方法。</p>
 <p>可选的方法：</p>
@@ -547,19 +574,30 @@
 <td>方法简单，不需要重新划分基本块，不存在iterator失效问题，但执行时性能较差且出错窗口较大</td>
 </tr>
 <tr>
-<td>比对之后，结果存于cmp变量中，在当前指令拆分基本块，并插入br rror_detection指令</td>
+<td>比对之后，结果存于cmp变量中，在当前指令拆分基本块，并插入br error_detection指令</td>
 <td>已尝试</td>
 <td>报错，“Instruction does not dominate all uses!”</td>
 <td>每次拆分基本块，会是iterator失效，只能重新获取iterator，效率很低。且函数尾部的error_detection标签所处基本块，原本为unreachable，被某处br到后，原本的ret语句不知为何，报错。</td>
 </tr>
 <tr>
 <td>比对之后，结果存于cmp变量中，在当前指令拆分基本块，并插入if-then-else，在then中插入错误处理函数</td>
-<td></td>
-<td></td>
-<td>每次拆分基本块，会是iterator失效，只能重新获取iterator，效率很低。</td>
+<td>已尝试</td>
+<td>报错</td>
+<td>每次拆分基本块，会是iterator失效，只能重新获取iterator，效率很低。该方法看似不会存在问题，但是仍然报错，怀疑是iterator的问题</td>
+</tr>
+<tr>
+<td>比对之后，结果存于cmp变量中，在当前指令拆分基本块，并插入if-then-else，在then中插入到error_detection的无条件跳转</td>
+<td>已尝试</td>
+<td>报错，“Instruction does not dominate all uses!”</td>
+<td>看来问题集中在ret指令要dominate all uses上</td>
 </tr>
 </tbody>
 </table>
+<p>经过各种测试，问题集中在两个方面：</p>
+<ul>
+<li style="list-style: none"><input type="checkbox"> 如何在iterator失效的情况下，相对高效地完成对每条代码的扫描</li>
+<li style="list-style: none"><input type="checkbox"> 如何解决Instruction does not dominate all uses!问题</li>
+</ul>
 
       
     </div>
@@ -804,7 +842,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="Symbols count total">15k</span>
+    <span title="Symbols count total">20k</span>
   
 
   
@@ -813,7 +851,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="Reading time total">0:15</span>
+    <span title="Reading time total">0:20</span>
   
 </div>
 
@@ -968,7 +1006,7 @@
       var disqus_config = function () {
         this.page.url = 'http://ifuleyou.github.io/2018/03/27/LLVMlearning/';
         this.page.identifier = '2018/03/27/LLVMlearning/';
-        this.page.title = '学习LLVM，并实现中间代码级的指令复算';
+        this.page.title = '逐步实现LLVM下的自动软加固工具';
       };
       function loadComments () {
         var d = document, s = d.createElement('script');
