@@ -100,24 +100,28 @@
 
 
   
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="学术," />
 
 
+<meta name="description" content="本文是本人博士课题研究过程中的研究日志和开发日志，记录研究思路、开发过程，以及遇到的坑。 面向SEU的程序可靠性分析技术主要涉及到的工具有：基于PIN的程序动态分析工具，利用python实现的动态依赖图（Dynamic Dependency Graph， DDG）生成工具，基于LLVM的软加固工具。 1 基于PIN的程序动态分析工具坑：进行动态profile时，打印出的static instru">
+<meta name="keywords" content="学术">
 <meta property="og:type" content="article">
-<meta property="og:title" content="dynamicreliabilityanalysis">
-<meta property="og:url" content="http://ifuleyou.github.io/2018/04/02/dynamicreliabilityanalysis/index.html">
+<meta property="og:title" content="面向SEU的程序可靠性分析技术（PIN、DDG、LLVM）">
+<meta property="og:url" content="http://xiaofengwo.github.io/2018/04/02/dynamicreliabilityanalysis/index.html">
 <meta property="og:site_name" content="民科小屋">
+<meta property="og:description" content="本文是本人博士课题研究过程中的研究日志和开发日志，记录研究思路、开发过程，以及遇到的坑。 面向SEU的程序可靠性分析技术主要涉及到的工具有：基于PIN的程序动态分析工具，利用python实现的动态依赖图（Dynamic Dependency Graph， DDG）生成工具，基于LLVM的软加固工具。 1 基于PIN的程序动态分析工具坑：进行动态profile时，打印出的static instru">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-04-02T12:01:16.259Z">
+<meta property="og:updated_time" content="2018-04-10T01:39:05.670Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="dynamicreliabilityanalysis">
+<meta name="twitter:title" content="面向SEU的程序可靠性分析技术（PIN、DDG、LLVM）">
+<meta name="twitter:description" content="本文是本人博士课题研究过程中的研究日志和开发日志，记录研究思路、开发过程，以及遇到的坑。 面向SEU的程序可靠性分析技术主要涉及到的工具有：基于PIN的程序动态分析工具，利用python实现的动态依赖图（Dynamic Dependency Graph， DDG）生成工具，基于LLVM的软加固工具。 1 基于PIN的程序动态分析工具坑：进行动态profile时，打印出的static instru">
 
 
 
 
 
 
-  <link rel="canonical" href="http://ifuleyou.github.io/2018/04/02/dynamicreliabilityanalysis/"/>
+  <link rel="canonical" href="http://xiaofengwo.github.io/2018/04/02/dynamicreliabilityanalysis/"/>
 
 
 
@@ -126,7 +130,7 @@
     sidebar: "",
   };
 </script>
-  <title>dynamicreliabilityanalysis | 民科小屋</title>
+  <title>面向SEU的程序可靠性分析技术（PIN、DDG、LLVM） | 民科小屋</title>
   
 
 
@@ -328,7 +332,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://ifuleyou.github.io/2018/04/02/dynamicreliabilityanalysis/">
+    <link itemprop="mainEntityOfPage" href="http://xiaofengwo.github.io/2018/04/02/dynamicreliabilityanalysis/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="xiaofengwo">
@@ -345,7 +349,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">dynamicreliabilityanalysis</h1>
+          <h1 class="post-title" itemprop="name headline">面向SEU的程序可靠性分析技术（PIN、DDG、LLVM）</h1>
         
 
         <div class="post-meta">
@@ -385,7 +389,7 @@
 
           
           
-             <span id="/2018/04/02/dynamicreliabilityanalysis/" class="leancloud_visitors" data-flag-title="dynamicreliabilityanalysis">
+             <span id="/2018/04/02/dynamicreliabilityanalysis/" class="leancloud_visitors" data-flag-title="面向SEU的程序可靠性分析技术（PIN、DDG、LLVM）">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -415,7 +419,7 @@
                 
                   <span class="post-meta-item-text">Symbols count in article&#58;</span>
                 
-                <span title="Symbols count in article">0</span>
+                <span title="Symbols count in article">496</span>
               
 
               
@@ -449,7 +453,12 @@
       
 
       
-        
+        <p> 本文是本人博士课题研究过程中的研究日志和开发日志，记录研究思路、开发过程，以及遇到的坑。</p>
+<p>面向SEU的程序可靠性分析技术主要涉及到的工具有：基于PIN的程序动态分析工具，利用python实现的动态依赖图（Dynamic Dependency Graph， DDG）生成工具，基于LLVM的软加固工具。</p>
+<h2 id="1-基于PIN的程序动态分析工具"><a href="#1-基于PIN的程序动态分析工具" class="headerlink" title="1 基于PIN的程序动态分析工具"></a>1 基于PIN的程序动态分析工具</h2><p>坑：进行动态profile时，打印出的static instruction中有遗漏，造成DDG绘制不完整</p>
+<p>原因：为了聚焦在分析的代码上，在进行动态插桩时需要进行筛选，通常使用filter，通过指定Routine的名字来进行筛选。但我采用了他人开发的pin-tool中的方式，单独实现了筛选功能，不需要指定Routine的名字，直接筛选位于.text段的二进制程序，排除.init / .fini段的影响。但其中有一种筛选方式，筛掉了没有写入寄存器的指令比如store指令（x86中没有store指令，是以move指令实现的）：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">REG reg = INS_RegW(ins, <span class="number">0</span>);</span><br><span class="line"><span class="keyword">if</span>(!REG_valid(reg))</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">false</span>;</span><br></pre></td></tr></table></figure>
+
       
     </div>
     
@@ -463,6 +472,12 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/学术/" rel="tag"># 学术</a>
+          
+        </div>
       
 
       
@@ -552,8 +567,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -651,6 +675,22 @@
       </section>
 
       
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-基于PIN的程序动态分析工具"><span class="nav-number">1.</span> <span class="nav-text">1 基于PIN的程序动态分析工具</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
 
       
 
@@ -676,7 +716,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="Symbols count total">55k</span>
+    <span title="Symbols count total">56k</span>
   
 
   
@@ -685,7 +725,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="Reading time total">0:55</span>
+    <span title="Reading time total">0:56</span>
   
 </div>
 
@@ -838,9 +878,9 @@
   
     <script type="text/javascript">
       var disqus_config = function () {
-        this.page.url = 'http://ifuleyou.github.io/2018/04/02/dynamicreliabilityanalysis/';
+        this.page.url = 'http://xiaofengwo.github.io/2018/04/02/dynamicreliabilityanalysis/';
         this.page.identifier = '2018/04/02/dynamicreliabilityanalysis/';
-        this.page.title = 'dynamicreliabilityanalysis';
+        this.page.title = '面向SEU的程序可靠性分析技术（PIN、DDG、LLVM）';
       };
       function loadComments () {
         var d = document, s = d.createElement('script');
