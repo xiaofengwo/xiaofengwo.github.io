@@ -7,7 +7,7 @@
 
 <html class="theme-next muse use-motion" lang="zh-Hans">
 <head>
-  <meta charset="UTF-8"/>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 <meta name="theme-color" content="#222">
@@ -103,19 +103,19 @@
   <meta name="keywords" content="学术," />
 
 
-<meta name="description" content="面向SEU的程序可靠性分析技术主要涉及到的工具有：基于PIN的程序动态分析工具，利用python实现的动态依赖图（Dynamic Dependency Graph， DDG）生成工具，基于LLVM的软加固工具。 1 基于PIN的程序动态分析工具坑：进行动态profile时，打印出的static instruction中有遗漏，造成DDG绘制不完整 原因：为了聚焦在分析的代码上，在进行动态插桩">
+<meta name="description" content="面向SEU的程序可靠性分析技术主要涉及到的工具有：基于PIN的程序动态分析工具，利用python实现的动态依赖图（Dynamic Dependency Graph， DDG）生成工具，基于LLVM的软加固工具。 1 基于PIN的程序动态分析工具坑：进行动态profile时，打印出的static instruction中有遗漏，造成DDG绘制不完整 原因：为了聚焦在分析的代码上，在进行动态插桩时需要">
 <meta name="keywords" content="学术">
 <meta property="og:type" content="article">
 <meta property="og:title" content="面向SEU的程序可靠性分析技术（PIN、DDG、LLVM）">
 <meta property="og:url" content="http://xiaofengwo.github.io/2018/04/02/dynamicreliabilityanalysis/index.html">
 <meta property="og:site_name" content="蜂巢">
-<meta property="og:description" content="面向SEU的程序可靠性分析技术主要涉及到的工具有：基于PIN的程序动态分析工具，利用python实现的动态依赖图（Dynamic Dependency Graph， DDG）生成工具，基于LLVM的软加固工具。 1 基于PIN的程序动态分析工具坑：进行动态profile时，打印出的static instruction中有遗漏，造成DDG绘制不完整 原因：为了聚焦在分析的代码上，在进行动态插桩">
+<meta property="og:description" content="面向SEU的程序可靠性分析技术主要涉及到的工具有：基于PIN的程序动态分析工具，利用python实现的动态依赖图（Dynamic Dependency Graph， DDG）生成工具，基于LLVM的软加固工具。 1 基于PIN的程序动态分析工具坑：进行动态profile时，打印出的static instruction中有遗漏，造成DDG绘制不完整 原因：为了聚焦在分析的代码上，在进行动态插桩时需要">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://xiaofengwo.github.io/2018/04/02/dynamicreliabilityanalysis/vul_space_in_hardened_program.png">
-<meta property="og:updated_time" content="2018-04-25T01:04:38.562Z">
+<meta property="og:updated_time" content="2018-04-25T01:20:40.307Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="面向SEU的程序可靠性分析技术（PIN、DDG、LLVM）">
-<meta name="twitter:description" content="面向SEU的程序可靠性分析技术主要涉及到的工具有：基于PIN的程序动态分析工具，利用python实现的动态依赖图（Dynamic Dependency Graph， DDG）生成工具，基于LLVM的软加固工具。 1 基于PIN的程序动态分析工具坑：进行动态profile时，打印出的static instruction中有遗漏，造成DDG绘制不完整 原因：为了聚焦在分析的代码上，在进行动态插桩">
+<meta name="twitter:description" content="面向SEU的程序可靠性分析技术主要涉及到的工具有：基于PIN的程序动态分析工具，利用python实现的动态依赖图（Dynamic Dependency Graph， DDG）生成工具，基于LLVM的软加固工具。 1 基于PIN的程序动态分析工具坑：进行动态profile时，打印出的static instruction中有遗漏，造成DDG绘制不完整 原因：为了聚焦在分析的代码上，在进行动态插桩时需要">
 <meta name="twitter:image" content="http://xiaofengwo.github.io/2018/04/02/dynamicreliabilityanalysis/vul_space_in_hardened_program.png">
 
 
@@ -168,7 +168,7 @@
       .logo-line-after i { right: initial; }
     }
   </style>
-</noscript>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </head>
 
@@ -179,7 +179,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -421,7 +421,7 @@
                 
                   <span class="post-meta-item-text">Symbols count in article&#58;</span>
                 
-                <span title="Symbols count in article">1.7k</span>
+                <span title="Symbols count in article">1.8k</span>
               
 
               
@@ -455,10 +455,7 @@
       
 
       
-        <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
-</script>
-
-<p>面向SEU的程序可靠性分析技术主要涉及到的工具有：基于PIN的程序动态分析工具，利用python实现的动态依赖图（Dynamic Dependency Graph， DDG）生成工具，基于LLVM的软加固工具。</p>
+        <p>面向SEU的程序可靠性分析技术主要涉及到的工具有：基于PIN的程序动态分析工具，利用python实现的动态依赖图（Dynamic Dependency Graph， DDG）生成工具，基于LLVM的软加固工具。</p>
 <h2 id="1-基于PIN的程序动态分析工具"><a href="#1-基于PIN的程序动态分析工具" class="headerlink" title="1 基于PIN的程序动态分析工具"></a>1 基于PIN的程序动态分析工具</h2><p>坑：进行动态profile时，打印出的static instruction中有遗漏，造成DDG绘制不完整</p>
 <p>原因：为了聚焦在分析的代码上，在进行动态插桩时需要进行筛选，通常使用filter，通过指定Routine的名字来进行筛选。但我采用了他人开发的pin-tool中的方式，单独实现了筛选功能，不需要指定Routine的名字，直接筛选位于.text段的二进制程序，排除.init / .fini段的影响。但其中有一种筛选方式，筛掉了没有写入寄存器的指令比如store指令（x86中没有store指令，是以move指令实现的）：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">REG reg = INS_RegW(ins, <span class="number">0</span>);</span><br><span class="line"><span class="keyword">if</span>(!REG_valid(reg))</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">false</span>;</span><br></pre></td></tr></table></figure>
@@ -468,7 +465,7 @@
 <li>根据“基于PIN的程序动态分析工具”得到的分析结果（静态指令序列，动态指令序列，内存地址访问记录），生成DDG。由于在动态指令序列上进行分析，不需要进行控制流分析，仅仅将指令序列前后依赖的寄存器和内存统一定义为var，针对每条动态指令对var的读和写，形成DDG。DDG中的edge连接两个动态指令（node），箭头为依赖方向（与传播方向相反），edge上的tag存储了形成依赖的var以及能够传播到下一node的基本单元（unit）的位数unmasked_bits。</li>
 <li>针对未加固程序，找到关键指令。关键指令是影响程序执行轨迹、影响输出的指令，我们认为关键指令出错将会导致程序传播路径受到影响，不能够通过程序自身的mask effect自行恢复，简言之，一旦关键指令发生错误，将导致program failure。<strong>因此，我们的传播分析，就是分析哪些错误会导致关键指令出错，以致于产生program failure。</strong>关键指令的范围包括但不限于：<strong>跳转指令，函数调用指令</strong>。</li>
 <li>找出所有的基本错误集合。基本错误（Basic Error）以$E_u^{(m,n)}$表示，$u$是基本单元，$m$和$n$是起止时间，表示的是基本单元$u$在$m$和$n$时间内产生错误的事件，$u$的每个二进制位经过一个时钟周期成为一个bit-cycle，一个bit-cycle也就是一个脆弱点（vulnerable point）。寻找所有的基本错误集合，也就是找到了所有的vulnerable point。每个Basic Error体现在DDG的edge上，找到基本错误集合，就是要遍历DDG的所有edge，因为我们只关心关键指令，所以遍历 以关键指令为起点，按照依赖关系遍历DDG，目前采用广度优先。</li>
-<li>针对软加固程序，除了找出所有的基本错误集合，还要找到所有能够检测到的错误集合。这里涉及到一个关键技术<strong>检测指令识别</strong>和<strong>复算域的识别</strong>，<strong>检测指令识别</strong>是指在</li>
+<li>针对软加固程序，除了找出所有的基本错误集合，还要找到所有能够检测到的错误集合。这里涉及到一个关键技术<strong>检测指令识别</strong>和<strong>复算域的识别</strong>，<strong>检测指令识别</strong>是指在DDG中识别出具有错误检测能力的detection_node，<strong>复算域识别</strong>是指在DDG中，以detection_node为起点，找到所有的由同一</li>
 </ul>
 <p>主要存在问题：</p>
 <ul>
@@ -1393,6 +1390,36 @@
 
 
   
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    
+  
+
 
   
   
@@ -1418,7 +1445,7 @@
 
   
   <script type="text/javascript" src="/js/src/js.cookie.js?v=6.0.3"></script>
-  <script type="text/javascript" src="/js/src/scroll-cookie.js?v=6.0.3"></script>
+  <script type="text/javascript" src="/js/src/scroll-cookie.js?v=6.0.3"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
   
