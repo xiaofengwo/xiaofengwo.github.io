@@ -114,7 +114,7 @@
 <meta property="og:image" content="http://xiaofengwo.github.io/2018/01/30/howtobuildhexoblogingithub/howtobuildhexoblogingithub1.jpg">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1864475-b3d37a72b1c55ffa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1864475-1413c4ad7f6b6517.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
-<meta property="og:updated_time" content="2018-02-06T09:00:46.539Z">
+<meta property="og:updated_time" content="2018-04-25T01:40:00.677Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何利用hexo在github上建立自己的博客">
 <meta name="twitter:description" content="1 建立hexo本地站点具体参考https://hexo.io/主要步骤：1hexo init 1hexo g 1hexo s 默认端口为4000，如果该端口被占用，可以通过hexo s -p 8080将端口改为8080 2 配置主题在https://hexo.io/themes/ 中选择适合自己的主题，并copy到themes文件夹以下以next主题为例 3 配置github自动部署参考http">
@@ -441,7 +441,7 @@
                 
                   <span class="post-meta-item-text">Symbols count in article&#58;</span>
                 
-                <span title="Symbols count in article">4.2k</span>
+                <span title="Symbols count in article">4.8k</span>
               
 
               
@@ -455,7 +455,7 @@
                 
                   <span class="post-meta-item-text">Reading time &asymp;</span>
                 
-                <span title="Reading time">0:04</span>
+                <span title="Reading time">0:05</span>
               
             </div>
           
@@ -510,7 +510,17 @@
 <p>比如说：当你打开文章资源文件夹功能后，你把一个 <code>example.jpg</code>图片放在了你的资源文件夹中，如果通过使用相对路径的常规 markdown 语法 <code>[](/example.jpg)</code>，它将 不会 出现在首页上。（但是它会在文章中按你期待的方式工作）</p>
 <p>正确的引用图片方式是使用下列的标签插件而不是<code>markdown</code></p>
 <p><img src="http://upload-images.jianshu.io/upload_images/1864475-1413c4ad7f6b6517.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt="img"></p>
-<p>​</p>
+<h4 id="7-hexo的公式支持"><a href="#7-hexo的公式支持" class="headerlink" title="7 hexo的公式支持"></a>7 hexo的公式支持</h4><p>参考：<a href="http://stevenshi.me/2017/06/26/hexo-insert-formula/" target="_blank" rel="noopener">http://stevenshi.me/2017/06/26/hexo-insert-formula/</a></p>
+<p>配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-math --save</span><br></pre></td></tr></table></figure>
+<p>在站点配置文件 <em>_config.yml</em> 中添加：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">math:</span></span><br><span class="line"><span class="attr">  engine:</span> <span class="string">'mathjax'</span> <span class="comment"># or 'katex'</span></span><br><span class="line"><span class="attr">  mathjax:</span></span><br><span class="line">    <span class="comment"># src: custom_mathjax_source</span></span><br><span class="line"><span class="attr">    config:</span></span><br><span class="line">      <span class="comment"># MathJax config</span></span><br></pre></td></tr></table></figure>
+<p>在 next 主题配置文件中 <em>themes/next-theme/_config.yml</em> 中将 mathJax 设为 true:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># MathJax Support</span></span><br><span class="line"><span class="attr">mathjax:</span></span><br><span class="line"><span class="attr">  enable:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">  per_page:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">  cdn:</span> <span class="string">//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML</span></span><br></pre></td></tr></table></figure>
+<p>也可以在文章的开始集成插件支持，但不建议这么做：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=<span class="string">"text/javascript"</span></span><br><span class="line">   src=<span class="string">"http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"</span>&gt;</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
+<p>使用</p>
+<p>$数学公式$ 行内 不独占一行<br>$$数学公式$$ 行间 独占一行</p>
 </li>
 </ul>
 
@@ -741,7 +751,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-建立hexo本地站点"><span class="nav-number">1.</span> <span class="nav-text">1 建立hexo本地站点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-配置主题"><span class="nav-number">2.</span> <span class="nav-text">2 配置主题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-配置github自动部署"><span class="nav-number">3.</span> <span class="nav-text">3 配置github自动部署</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-配置评论、评分、访问计数"><span class="nav-number">4.</span> <span class="nav-text">4 配置评论、评分、访问计数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-如何为next主题添加背景效果"><span class="nav-number">5.</span> <span class="nav-text">5 如何为next主题添加背景效果</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-为hexo博客插入图片"><span class="nav-number">6.</span> <span class="nav-text">6 为hexo博客插入图片</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-建立hexo本地站点"><span class="nav-number">1.</span> <span class="nav-text">1 建立hexo本地站点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-配置主题"><span class="nav-number">2.</span> <span class="nav-text">2 配置主题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-配置github自动部署"><span class="nav-number">3.</span> <span class="nav-text">3 配置github自动部署</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-配置评论、评分、访问计数"><span class="nav-number">4.</span> <span class="nav-text">4 配置评论、评分、访问计数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-如何为next主题添加背景效果"><span class="nav-number">5.</span> <span class="nav-text">5 如何为next主题添加背景效果</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-为hexo博客插入图片"><span class="nav-number">6.</span> <span class="nav-text">6 为hexo博客插入图片</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-hexo的公式支持"><span class="nav-number">7.</span> <span class="nav-text">7 hexo的公式支持</span></a></li></ol></div>
             
 
           </div>
@@ -773,7 +783,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="Symbols count total">57k</span>
+    <span title="Symbols count total">58k</span>
   
 
   
@@ -782,7 +792,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="Reading time total">0:57</span>
+    <span title="Reading time total">0:58</span>
   
 </div>
 
