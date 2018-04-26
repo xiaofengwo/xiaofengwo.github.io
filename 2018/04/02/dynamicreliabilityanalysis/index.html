@@ -112,7 +112,7 @@
 <meta property="og:description" content="面向SEU的程序可靠性分析技术主要涉及到的工具有：基于PIN的程序动态分析工具，利用python实现的动态依赖图（Dynamic Dependency Graph， DDG）生成工具，基于LLVM的软加固工具。 1 基于PIN的程序动态分析工具坑：进行动态profile时，打印出的static instruction中有遗漏，造成DDG绘制不完整 原因：为了聚焦在分析的代码上，在进行动态插桩时需要">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://xiaofengwo.github.io/2018/04/02/dynamicreliabilityanalysis/vul_space_in_hardened_program.png">
-<meta property="og:updated_time" content="2018-04-25T01:20:40.307Z">
+<meta property="og:updated_time" content="2018-04-26T14:52:38.642Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="面向SEU的程序可靠性分析技术（PIN、DDG、LLVM）">
 <meta name="twitter:description" content="面向SEU的程序可靠性分析技术主要涉及到的工具有：基于PIN的程序动态分析工具，利用python实现的动态依赖图（Dynamic Dependency Graph， DDG）生成工具，基于LLVM的软加固工具。 1 基于PIN的程序动态分析工具坑：进行动态profile时，打印出的static instruction中有遗漏，造成DDG绘制不完整 原因：为了聚焦在分析的代码上，在进行动态插桩时需要">
@@ -421,7 +421,7 @@
                 
                   <span class="post-meta-item-text">Symbols count in article&#58;</span>
                 
-                <span title="Symbols count in article">1.8k</span>
+                <span title="Symbols count in article">2.2k</span>
               
 
               
@@ -464,8 +464,10 @@
 <ul>
 <li>根据“基于PIN的程序动态分析工具”得到的分析结果（静态指令序列，动态指令序列，内存地址访问记录），生成DDG。由于在动态指令序列上进行分析，不需要进行控制流分析，仅仅将指令序列前后依赖的寄存器和内存统一定义为var，针对每条动态指令对var的读和写，形成DDG。DDG中的edge连接两个动态指令（node），箭头为依赖方向（与传播方向相反），edge上的tag存储了形成依赖的var以及能够传播到下一node的基本单元（unit）的位数unmasked_bits。</li>
 <li>针对未加固程序，找到关键指令。关键指令是影响程序执行轨迹、影响输出的指令，我们认为关键指令出错将会导致程序传播路径受到影响，不能够通过程序自身的mask effect自行恢复，简言之，一旦关键指令发生错误，将导致program failure。<strong>因此，我们的传播分析，就是分析哪些错误会导致关键指令出错，以致于产生program failure。</strong>关键指令的范围包括但不限于：<strong>跳转指令，函数调用指令</strong>。</li>
-<li>找出所有的基本错误集合。基本错误（Basic Error）以$E_u^{(m,n)}$表示，$u$是基本单元，$m$和$n$是起止时间，表示的是基本单元$u$在$m$和$n$时间内产生错误的事件，$u$的每个二进制位经过一个时钟周期成为一个bit-cycle，一个bit-cycle也就是一个脆弱点（vulnerable point）。寻找所有的基本错误集合，也就是找到了所有的vulnerable point。每个Basic Error体现在DDG的edge上，找到基本错误集合，就是要遍历DDG的所有edge，因为我们只关心关键指令，所以遍历 以关键指令为起点，按照依赖关系遍历DDG，目前采用广度优先。</li>
-<li>针对软加固程序，除了找出所有的基本错误集合，还要找到所有能够检测到的错误集合。这里涉及到一个关键技术<strong>检测指令识别</strong>和<strong>复算域的识别</strong>，<strong>检测指令识别</strong>是指在DDG中识别出具有错误检测能力的detection_node，<strong>复算域识别</strong>是指在DDG中，以detection_node为起点，找到所有的由同一</li>
+<li>找出所有的基本错误集合。基本错误（Basic Error）以$E_u^{(m,n)}$表示，$u$是基本单元，$m$和$n$是起止时间，表示的是基本单元$u$在$m$和$n$时间内产生错误的事件，$u$的每个二进制位经过一个时钟周期称为一个bit-cycle，一个bit-cycle也就是一个脆弱点（vulnerable point）。寻找所有的基本错误集合，也就是找到了所有的vulnerable point。每个Basic Error体现在DDG的edge上，找到基本错误集合，就是要遍历DDG的所有edge，因为我们只关心关键指令，所以遍历 以关键指令为起点，按照依赖关系遍历DDG，目前采用广度优先。</li>
+<li>针对软加固程序，除了找出所有的基本错误集合，还要找到所有能够检测到的错误集合。这里涉及到两个关键技术：<strong>检测指令识别</strong>和<strong>复算域的识别</strong>，<strong>检测指令识别</strong>是指在DDG中识别出具有错误检测能力的detection_node，<strong>复算域识别</strong>是指在DDG中，以detection_node为起点，找到所有的复算边界，该边界以的特点是，存在两条对同一var的扇入，即，将从检测指令开始到有两条对同一var的扇入的点结束的区域识别为复算域。我们将复算域中，副本变量从产生到被检测之间的运算称为副本运算，相应的原始运算过程称为原始运算，由于错误传播机制，副本运算中可能涉及到多个副本变量，也可能涉及到一些没有经过复算的变量，每一条副本运算也不一定有完全相同的原始运算（例如：差异性变换，多版本复算，等）。注意：与LLVM中的分析不同，LLVM的IR中，每条指令的写入目标只有一个，采用SSA方式，且每个指令的输出与这条指令之间可以隐式转换（利用了诡异的），</li>
+<li>每条指令的输出并非只有一个</li>
+<li>为识别复算域，我们对加固算法做出如下限定，这些假定适用的算法包括EDDI，SWIFT：1）复算域中，除检测语句外，不含有副本变量和原变量的</li>
 </ul>
 <p>主要存在问题：</p>
 <ul>
@@ -475,6 +477,7 @@
 <p><img src="vul_space_in_hardened_program.png" alt="vul_space_in_hardened_program.png"></p>
 <ul>
 <li>DDG中多扇入（fan in）的时间先后计算问题。如果DDG中，某一个node被多个node所依赖且依赖关系源自于同一个var，基本错误集中将会重复计算多扇入点中相应var的脆弱区间。解决办法，是获取到错误集合后，不直接计算脆弱区间，而是针对不同的var，对区间进行再次合并，最后进行统一计算。</li>
+<li>暂不支持对控制流加固算法和ABFT加固算法的可靠性分析。</li>
 </ul>
 
       
