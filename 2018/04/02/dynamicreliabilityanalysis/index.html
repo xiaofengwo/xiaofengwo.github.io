@@ -114,7 +114,7 @@
 <meta property="og:image" content="http://xiaofengwo.github.io/2018/04/02/dynamicreliabilityanalysis/recognize_sor.png">
 <meta property="og:image" content="http://xiaofengwo.github.io/2018/04/02/dynamicreliabilityanalysis/basic_error_transform.png">
 <meta property="og:image" content="http://xiaofengwo.github.io/2018/04/02/dynamicreliabilityanalysis/vul_space_in_hardened_program.png">
-<meta property="og:updated_time" content="2018-05-01T13:20:57.584Z">
+<meta property="og:updated_time" content="2018-05-01T13:27:30.718Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="面向SEU的程序可靠性分析技术（PIN、DDG、LLVM）">
 <meta name="twitter:description" content="面向SEU的程序可靠性分析技术主要涉及到的工具有：基于PIN的程序动态分析工具，利用python实现的动态依赖图（Dynamic Dependency Graph， DDG）生成工具，基于LLVM的软加固工具。 1 基于PIN的程序动态分析工具坑：进行动态profile时，打印出的static instruction中有遗漏，造成DDG绘制不完整 原因：为了聚焦在分析的代码上，在进行动态插桩时需要">
@@ -484,7 +484,7 @@
 </li>
 <li><p>在性能上，上述算法虽然有3重循环，但loop2中的循环控制变量“指令依赖的VALUE数”通常小于3，loop3中的循环控制变量“依赖于当前指令定值的VALUE的指令数”通常也是常量级别，因此上述算法仍然是$O(n)$的，$n$是DDG中所有指令的条数。</p>
 </li>
-<li><p>识别出SoR中包含的指令之后，就可以针对这些指令构成的子图DDG’进行遍历，以获取受到检测指令保护的基本错误集合，并根据错误集合计算出错误区间。这里的关键问题是，各个基本错误集合中的错误区间是存在重合的，获取到错误集合后，不直接计算脆弱区间，而是针对不同的VALUE，对区间进行再次合并，最后进行统一计算。如下图中，指令2使用了32位的v，指令3使用了16位的v，基本错误集合为{$v<em>{32}^{(1,2)}$, $v</em>{16}^{(1,3)}$}，其中1~2指令周期内的错误区间在两个基本错误中都覆盖到了。在计算错误区间时，需要进行重新整理，将错误集合整理为互不包含的两个基本错误{$v<em>{32}^{(1,2)}$, $v</em>{16}^{(2,,3)}$}，注意，这里两个基本错误的unmasked-bits是不同的，在整理基本错误集合时，要优先按照大的值进行。</p>
+<li><p>识别出SoR中包含的指令之后，就可以针对这些指令构成的子图DDG’进行遍历，以获取受到检测指令保护的基本错误集合，并根据错误集合计算出错误区间。这里的关键问题是，各个基本错误集合中的错误区间是存在重合的，获取到错误集合后，不直接计算脆弱区间，而是针对不同的VALUE，对区间进行再次合并，最后进行统一计算。如下图中，指令2使用了32位的v，指令3使用了16位的v，基本错误集合为{ $v<em>{32}^{(1,2)}, v</em>{16}^{(1,3)}$ }，其中1~2指令周期内的错误区间在两个基本错误中都覆盖到了。在计算错误区间时，需要进行重新整理，将错误集合整理为互不包含的两个基本错误{$v<em>{32}^{(1,2)}, v</em>{16}^{(2,,3)}$}，注意，这里两个基本错误的unmasked-bits是不同的，在整理基本错误集合时，要优先按照大的值进行。</p>
 <p><img src="basic_error_transform.png" alt="basic_error_transform.png"></p>
 </li>
 </ul>
