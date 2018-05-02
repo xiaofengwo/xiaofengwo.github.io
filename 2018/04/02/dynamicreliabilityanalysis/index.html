@@ -114,8 +114,8 @@
 <meta property="og:image" content="http://xiaofengwo.github.io/2018/04/02/dynamicreliabilityanalysis/recognize_sor.png">
 <meta property="og:image" content="http://xiaofengwo.github.io/2018/04/02/dynamicreliabilityanalysis/basic_error_transform.png">
 <meta property="og:image" content="http://xiaofengwo.github.io/2018/04/02/dynamicreliabilityanalysis/vul_space_in_hardened_program.png">
-<meta property="og:image" content="http://xiaofengwo.github.io/2018/04/02/dynamicreliabilityanalysis/vul_space_in_hardened_program2png">
-<meta property="og:updated_time" content="2018-05-02T12:22:16.023Z">
+<meta property="og:image" content="http://xiaofengwo.github.io/2018/04/02/dynamicreliabilityanalysis/vul_space_in_hardened_program2.png">
+<meta property="og:updated_time" content="2018-05-02T12:27:03.170Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="面向SEU的程序可靠性分析技术（PIN、DDG、LLVM）">
 <meta name="twitter:description" content="面向SEU的程序可靠性分析技术主要涉及到的工具有：基于PIN的程序动态分析工具，利用python实现的动态依赖图（Dynamic Dependency Graph， DDG）生成工具，基于LLVM的软加固工具。 1 基于PIN的程序动态分析工具坑：进行动态profile时，打印出的static instruction中有遗漏，造成DDG绘制不完整 原因：为了聚焦在分析的代码上，在进行动态插桩时需要">
@@ -499,7 +499,7 @@
 </ul>
 <p><img src="vul_space_in_hardened_program.png" alt="vul_space_in_hardened_program.png"></p>
 <p>​    由于该问题是由中间代码加固实现导致的，而从根本上解决这个问题，需要从编译后端及编译开关的选取上进行。在没有解决中间代码软加固实现问题之前，如果需要对SWIFT算法的可靠性进行测试，需要一些小trick，即，将由软加固导致的出栈入栈过程纳入到可检测区间。尽管这样的做法与完美解决问题之间有一定出入，但在现阶段已经是最能够接近真实加固后的效果了。如下图所示：</p>
-<p><img src="vul_space_in_hardened_program2png" alt="vul_space_in_hardened_program2.png"></p>
+<p><img src="vul_space_in_hardened_program2.png" alt="vul_space_in_hardened_program2.png"></p>
 <ul>
 <li>暂不支持对控制流加固算法和ABFT加固算法的可靠性分析。</li>
 </ul>
