@@ -115,7 +115,7 @@
 <meta property="og:image" content="http://xiaofengwo.github.io/2018/04/02/dynamicreliabilityanalysis/basic_error_transform.png">
 <meta property="og:image" content="http://xiaofengwo.github.io/2018/04/02/dynamicreliabilityanalysis/vul_space_in_hardened_program.png">
 <meta property="og:image" content="http://xiaofengwo.github.io/2018/04/02/dynamicreliabilityanalysis/vul_space_in_hardened_program_2.png">
-<meta property="og:updated_time" content="2018-05-03T13:45:58.971Z">
+<meta property="og:updated_time" content="2018-05-09T10:56:07.706Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="面向SEU的程序可靠性分析技术（PIN、DDG、LLVM）">
 <meta name="twitter:description" content="面向SEU的程序可靠性分析技术主要涉及到的工具有：基于PIN的程序动态分析工具，利用python实现的动态依赖图（Dynamic Dependency Graph， DDG）生成工具，基于LLVM的软加固工具。 1 基于PIN的程序动态分析工具坑：进行动态profile时，打印出的static instruction中有遗漏，造成DDG绘制不完整 原因：为了聚焦在分析的代码上，在进行动态插桩时需要">
@@ -424,7 +424,7 @@
                 
                   <span class="post-meta-item-text">Symbols count in article&#58;</span>
                 
-                <span title="Symbols count in article">5.5k</span>
+                <span title="Symbols count in article">8k</span>
               
 
               
@@ -438,7 +438,7 @@
                 
                   <span class="post-meta-item-text">Reading time &asymp;</span>
                 
-                <span title="Reading time">0:06</span>
+                <span title="Reading time">0:08</span>
               
             </div>
           
@@ -477,7 +477,7 @@
 </li>
 </ul>
 <ul>
-<li>从DDG中识别某个检测节点i所保护的复算域的具体算法如下，其中，DDG中的两个节点u和v中，如果u读取了v定值的数据，则称u依赖于v，在节点u中保存从u指向v的一条依赖边dEdge，同时，在节点v中保存一条传播边pEdge，每条边都存储了toNode，fromNode，以及建立依赖的VALUE。因为DDG会被多次访问，我们给每条边设置了visisted_time属性，用以区分当前的遍历是否。</li>
+<li>从DDG中识别某个检测节点i所保护的复算域的具体算法如下，其中，DDG中的两个节点u和v中，如果u读取了v定值的数据，则称u依赖于v，在节点u中保存从u指向v的一条依赖边dEdge，同时，在节点v中保存一条传播边pEdge，每条边都存储了toNode，fromNode，以及建立依赖的VALUE。因为DDG会被多次访问，我们给每条边设置了visisted_time属性，用以区分当前的遍历是否已经访问过该边。</li>
 </ul>
 <figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">Find-SoR(DDG, i)</span><br><span class="line">  SoR_instruction_set D &lt;- Make-<span class="keyword">Set</span>()</span><br><span class="line">  <span class="comment">//Traverse the DDG by dEdges from detection node i, and put the meet nodes into a set T</span></span><br><span class="line">  detection_instruction_dependence_set T &lt;- Make-<span class="keyword">Set</span>()</span><br><span class="line">  Q &lt;- Make-Queue()</span><br><span class="line">  Enqueue(Q, i)</span><br><span class="line">  <span class="keyword">while</span> <span class="keyword">not</span> IsEmpty(Q):</span><br><span class="line">  	<span class="keyword">do</span> 	u &lt;- Dequeue(Q)</span><br><span class="line">     	<span class="keyword">for</span> each edge d <span class="keyword">in</span> u.dEdges</span><br><span class="line">     		<span class="keyword">do</span> v &lt;- d.toNode</span><br><span class="line">     		<span class="keyword">do</span> AddToSet(T, v)</span><br><span class="line">     		   Enqueue(Q, v)</span><br><span class="line"></span><br><span class="line">  <span class="comment">//Traverse the DDG again, and find the</span></span><br><span class="line">  Empty(Q)</span><br><span class="line">  Enqueue(Q, i)</span><br><span class="line">  <span class="keyword">while</span> <span class="keyword">not</span> IsEmpty(Q)<span class="comment">//loop 1</span></span><br><span class="line">    <span class="keyword">do</span> 	u &lt;- Dequeue(Q)</span><br><span class="line">        <span class="keyword">for</span> each edge d <span class="keyword">in</span> u.dEdges<span class="comment">//loop 2</span></span><br><span class="line">          <span class="keyword">do</span>  v &lt;- d.toNode</span><br><span class="line">              isVInSoR &lt;- True</span><br><span class="line">              isVReplicaGen = False</span><br><span class="line">              <span class="keyword">for</span> each edge p <span class="keyword">in</span> v.pEdges<span class="comment">//loop 3</span></span><br><span class="line">              	<span class="keyword">do</span> <span class="keyword">if</span> p.value == value <span class="keyword">and</span> p.toNode != u</span><br><span class="line">              		<span class="keyword">then</span>  w &lt;- p.toNode</span><br><span class="line">              			  <span class="keyword">if</span> w <span class="keyword">in</span> T</span><br><span class="line">              			  	then if u is "mov" instruction and w is "mov" instruction</span><br><span class="line">              			  			<span class="keyword">then</span> isVReplicaGen = True</span><br><span class="line">              			  		 <span class="keyword">else</span></span><br><span class="line">              			  		 	<span class="keyword">then</span> isVInSoR = False</span><br><span class="line">              <span class="keyword">if</span> isVInSoR == True</span><br><span class="line">           	  	<span class="keyword">then</span>  AddToSet(D, v)</span><br><span class="line">                      <span class="keyword">if</span> isVReplicaGen == False</span><br><span class="line">                        <span class="keyword">then</span> Enqueue(Q, v)</span><br><span class="line">  return D</span><br></pre></td></tr></table></figure>
 <ul>
@@ -494,14 +494,35 @@
 <p>​    我们的分析方法直接从程序最终的可执行代码出发，分析粒度更加细致，分析结果更加精确，除能够达到以往分析方法的全部能力外，该方法还能够检测出由于编译器优化造成的软加固机制的失效，如使用同一寄存器存储副本变量和原始变量，指令顺序调整，寄存器数量不够或函数调用时保存寄存器现场时的错误区间。除此之外，我们可以有选择地分析目标代码的某一指定区域的可靠性，这对于评估软加固效果，确定检测盲区是十分重要的，并且可以区分在只针对部分代码进行加固的情况下，程序整体的可靠性能够达到怎样的状态。</p>
 <p>主要存在问题：</p>
 <ul>
-<li>时间空间开销问题。由于采用动态分析，程序的动态指令序列的长度，内存读写记录的长度都会随着输入的规模扩大，而变得很大，目前的算法复杂度几乎是O(n)，在执行效率上还算过得去，但在空间上，如果所有的数据都要存储到内存中操作，会导致内存不足，无法完成运算。为此，我们采用分块计算的方法，将动态指令序列和内存读取数据按照一定的规则进行分割，分别运算然后再合并到一起。分割不能破坏指令序列中的数据依赖关系。</li>
-<li>软加固程序的可靠性分析问题，由于采用的是中间代码级的软加固实现，编译后端的优化会破坏掉软加固机制，经过试验，即便不打开优化开关，后端编译仍然会导致软加固机制的严重损坏，为此，我们暂时折中采用将软加固代码封装在函数中，这样才使得软加固机制的错误检测能力得以保留，但因为引入和新的函数调用，使得部分寄存器会由于保留现场而进行入栈出栈操作，反而增大了脆弱区间，因此，尽管软加固机制能够检测大量的错误，软加固后的程序可靠性相较未加固程序仅提高了10%。</li>
+<li><p>时间空间开销问题。由于采用动态分析，程序的动态指令序列的长度，内存读写记录的长度都会随着输入的规模扩大，而变得很大，目前的算法复杂度几乎是O(n)，在执行效率上还算过得去，但在空间上，如果所有的数据都要存储到内存中操作，会导致内存不足，无法完成运算。为此，我们采用分块计算的方法，将动态指令序列和内存读取数据按照一定的规则进行分割，分别运算然后再合并到一起。由于分割不能破坏指令序列中的数据依赖关系，因此需要对一段指令序列的活跃数据所依赖的边进行备份保留。</p>
+</li>
+<li><p>软加固程序的可靠性分析问题，由于采用的是中间代码级的软加固实现，编译后端的优化会破坏掉软加固机制，经过试验，即便不打开优化开关，后端编译仍然会导致软加固机制的严重损坏，为此，我们暂时折中采用将软加固代码封装在函数中，这样才使得软加固机制的错误检测能力得以保留，但因为引入和新的函数调用，使得部分寄存器会由于保留现场而进行入栈出栈操作，反而增大了脆弱区间，因此，尽管软加固机制能够检测大量的错误，软加固后的程序可靠性相较未加固程序仅提高了10%。</p>
+</li>
 </ul>
 <p><img src="vul_space_in_hardened_program.png" alt="vul_space_in_hardened_program.png"></p>
 <p>​    由于该问题是由中间代码加固实现导致的，而从根本上解决这个问题，需要从编译后端及编译开关的选取上进行。在没有解决中间代码软加固实现问题之前，如果需要对SWIFT算法的可靠性进行测试，需要一些小trick，即，将由软加固导致的出栈入栈过程纳入到可检测区间。尽管这样的做法与完美解决问题之间有一定出入，但在现阶段已经是最能够接近真实加固后的效果了。如下图所示：</p>
 <p><img src="vul_space_in_hardened_program_2.png" alt="vul_space_in_hardened_program_2.png"></p>
 <ul>
 <li>暂不支持对控制流加固算法和ABFT加固算法的可靠性分析。</li>
+</ul>
+<p>实现上的细节：</p>
+<ul>
+<li><p>由于之前生成DDG的程序中，在所有指令之前添加了Entry起始点，并且Entry的id是1，而后添加的节点顺次递增，这与实际需求中以id代表动态指令序号的方式不同，因此进行调整。但Entry节点不能删除，其id最小也只能是0，所以暂时有两个id为0的节点，另一个是动态指令序号0。由此带来的问题，是对于将call指令的下一条指令纳入到检测指令，并计算复算域的临时方案，我们之前采用的以id为索引的查找方式，在调整了id编号后，再按照之前的索引会发现添加的是call指令的前一条指令，所以这里要跟着进行调整。</p>
+</li>
+<li><p>当前分析到的basic_error集合（也就是脆弱点集合）还没有进行合并，仅仅在计算区间大小的时候才进行了合并。现在已经通过将脆弱区间进行适当合并，并生成了一个value_interval_dict，解决了basic_error中脆弱点有重叠的问题。但在从general_vulnerable_points中取出SoR的detected_vulnerable_points时，最初使用的方法，是将二者的basic_error_set之间进行减法运算，这种方法会使得保留下来的脆弱区间过大，因为会存在在DDG中绕过了SoR，但实际上绕过DDG的这条边仍然有部分周期可以被SoR覆盖。因此，需要在general_vulnerable_points和detected_vulnerable_points之间，通过对各个value对应的区间列表进行减法运算，其算法描述如下：</p>
+<p>算法名：Interval_Subsection</p>
+<p>输入：value_interval_dict1和value_interval_dict2，每个value_interval_dict的数据结构为{value:[(t1,t2)(t3, t4)…(t5,t6)]}</p>
+<p>输出：二者的在interval上的差值，仍然为value_interval_dict</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">new_value_interval_dict = defaultdict&#123;<span class="keyword">lambda</span>: []&#125;</span><br><span class="line"><span class="keyword">for</span> var <span class="keyword">in</span> value_interval_dict1:</span><br><span class="line">    intervals1 = value_interval_dict1[var]</span><br><span class="line">    intervals2 = value_interval_dict2[var]</span><br><span class="line">    len1 = len(intervals1)</span><br><span class="line">    len2 = len(intervals2)</span><br><span class="line">    index1 = <span class="number">0</span></span><br><span class="line">    index2 = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> index1 &lt; len1 <span class="keyword">and</span> index2 &lt; len2:</span><br><span class="line">        t1 = intervals1[index1][<span class="number">0</span>]</span><br><span class="line">        t2 = intervals1[index1][<span class="number">1</span>]</span><br><span class="line">        unmasked_bits1 = intervals1[index1][<span class="number">2</span>]</span><br><span class="line">        </span><br><span class="line">        s1 = intervals2[index2][<span class="number">0</span>]</span><br><span class="line">        s2 = intervals2[index2][<span class="number">1</span>]</span><br><span class="line">        unmasked_bits2 = intervals2[index2][<span class="number">2</span>] </span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> t1 &gt;= s2:</span><br><span class="line">            index2 = index2 + <span class="number">1</span></span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">if</span> t2 &lt;= s1:</span><br><span class="line">            new_value_interval_dict[var].append((t1, t2, unmasked_bits1))</span><br><span class="line">            index1 = index1 + <span class="number">1</span></span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">if</span> t1 &lt; s1:</span><br><span class="line">            new_value_interval_dict[var].append((t1 + <span class="number">1</span>, s1, unmasked_bits1))</span><br><span class="line">        <span class="keyword">if</span> t2 &gt; s2:</span><br><span class="line">            intervals1[index1] = (s2, t2, unmasked_bits1)</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> t2 &lt; s2:</span><br><span class="line">            intervals2[index2] = (t2, s2, unmasked_bits2)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            index1 = index1 + <span class="number">1</span></span><br><span class="line">            index2 = index2 + <span class="number">1</span></span><br><span class="line">    <span class="keyword">if</span> len2 == index2:</span><br><span class="line">        <span class="keyword">while</span> index1 &lt; len1:</span><br><span class="line">            new_value_interval_dict[var].append(intervals1[index1])</span><br><span class="line">            index1 = index1 + <span class="number">1</span></span><br><span class="line"><span class="keyword">return</span> new_value_interval_dict</span><br></pre></td></tr></table></figure>
+<p>​</p>
+<p>​</p>
+</li>
+<li><p>对于unmasked_bits的分析还不够完善，很多脆弱点选得并不全面</p>
+</li>
+<li><p>Todo： 尚未实现对脆弱区间的删减工作，目前的删减停留在集合减法上，但这种方式并不准确，应该在脆弱点级别进行运算。</p>
+</li>
+<li><p>对于脆弱点区间的定义，在根据DDG的分析结果中，（t1, t2)所指代的脆弱点区间是从t1之后到t2之前的区间，而对于故障注入的fi_point而言，(t1, t2)所指代的故障注入区间是t1之前到t2之前，二者是不同的。所以，当（t1, t2）-(s1, s2)时，不需要考虑边界的调整，例如，当t1 &lt; s1, t2 &gt; s2时，差值为(t1, s1) (s2, t2)，而不是(t1, s1+1), (s2+1, t2)。</p>
+</li>
 </ul>
 
       
@@ -761,7 +782,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="Symbols count total">62k</span>
+    <span title="Symbols count total">64k</span>
   
 
   
@@ -770,7 +791,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="Reading time total">1:02</span>
+    <span title="Reading time total">1:04</span>
   
 </div>
 
