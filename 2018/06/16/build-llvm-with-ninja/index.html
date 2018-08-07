@@ -100,23 +100,28 @@
 
 
   
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="技术," />
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="蜂巢">
-<meta property="og:url" content="http://xiaofengwo.github.io/tags/github/index.html">
+<meta name="description" content="参考：https://blog.csdn.net/dreammeard/article/details/19490449 https://stackoverflow.com/questions/40042533/how-to-enable-debug-only-in-llvm-build-with-cmake https://llvm.org/docs/CMake.html 第一步 安装ninja">
+<meta name="keywords" content="技术">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Ninja编译llvm">
+<meta property="og:url" content="http://xiaofengwo.github.io/2018/06/16/build-llvm-with-ninja/index.html">
 <meta property="og:site_name" content="蜂巢">
+<meta property="og:description" content="参考：https://blog.csdn.net/dreammeard/article/details/19490449 https://stackoverflow.com/questions/40042533/how-to-enable-debug-only-in-llvm-build-with-cmake https://llvm.org/docs/CMake.html 第一步 安装ninja">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-16T13:40:09.968Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="蜂巢">
+<meta name="twitter:title" content="使用Ninja编译llvm">
+<meta name="twitter:description" content="参考：https://blog.csdn.net/dreammeard/article/details/19490449 https://stackoverflow.com/questions/40042533/how-to-enable-debug-only-in-llvm-build-with-cmake https://llvm.org/docs/CMake.html 第一步 安装ninja">
 
 
 
 
 
 
-  <link rel="canonical" href="http://xiaofengwo.github.io/tags/github/"/>
+  <link rel="canonical" href="http://xiaofengwo.github.io/2018/06/16/build-llvm-with-ninja/"/>
 
 
 
@@ -125,7 +130,7 @@
     sidebar: "",
   };
 </script>
-  <title>Tag: github | 蜂巢</title>
+  <title>使用Ninja编译llvm | 蜂巢</title>
   
 
 
@@ -172,7 +177,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -311,114 +316,258 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block tag">
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>github<small>Tag</small>
-        </h1>
-      </div>
-
-      
-        
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://xiaofengwo.github.io/2018/06/16/build-llvm-with-ninja/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xiaofengwo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="蜂巢">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2018/01/31/how to build your own github/" itemprop="url">
-              
-                <span itemprop="name">如何搭建自己的github</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">使用Ninja编译llvm</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-01-31T11:00:00+08:00"
-              content="2018-01-31" >
-          01-31
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-16T00:56:02+08:00">2018-06-16</time>
+            
 
-    </header>
-  </article>
+            
+            
 
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/06/16/build-llvm-with-ninja/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/06/16/build-llvm-with-ninja/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/06/16/build-llvm-with-ninja/" class="leancloud_visitors" data-flag-title="使用Ninja编译llvm">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Visitors&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Symbols count in article&#58;</span>
+                
+                <span title="Symbols count in article">2.1k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Reading time &asymp;</span>
+                
+                <span title="Reading time">0:02</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/01/31/list of the useful tools and sites/" itemprop="url">
-              
-                <span itemprop="name">一些有用的技术、工具和站点</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-01-31T11:00:00+08:00"
-              content="2018-01-31" >
-          01-31
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+      
 
       
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/01/30/howtobuildhexoblogingithub/" itemprop="url">
-              
-                <span itemprop="name">如何利用hexo在github上建立自己的博客</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-01-30T21:00:00+08:00"
-              content="2018-01-30" >
-          01-30
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
+        <p>参考：<a href="https://blog.csdn.net/dreammeard/article/details/19490449" target="_blank" rel="noopener">https://blog.csdn.net/dreammeard/article/details/19490449</a></p>
+<p><a href="https://stackoverflow.com/questions/40042533/how-to-enable-debug-only-in-llvm-build-with-cmake" target="_blank" rel="noopener">https://stackoverflow.com/questions/40042533/how-to-enable-debug-only-in-llvm-build-with-cmake</a></p>
+<p><a href="https://llvm.org/docs/CMake.html" target="_blank" rel="noopener">https://llvm.org/docs/CMake.html</a></p>
+<h1 id="第一步-安装ninja和cmake"><a href="#第一步-安装ninja和cmake" class="headerlink" title="第一步 安装ninja和cmake"></a><strong>第一步 安装ninja和cmake</strong></h1><p>1 获取并编译安装 ninja</p>
+<p> $ git clone git://github.com/martine/ninja.git</p>
+<p>$ cd ninja</p>
+<p>$ ./bootstrap.py</p>
+<p>$ sudo cp ninja /usr/local/bin/</p>
+<p>Q: warning: A compatible version of re2c (&gt;= 0.11.3) was not found;</p>
+<p>changes to src/*.in.cc will not affect your build.</p>
+<p>A: re2c 是一个用于编写快速灵活的词法分析器的工具.</p>
+<p>$sudo apt-get install re2c</p>
+<p>2 安装 cmake(至少需要 2.8.9):<br>用sudo apt-get install cmake得到的是 2.8.7–2013.3.7<br>可从<a href="http://www.cmake.org/cmake/resources/software.html获" target="_blank" rel="noopener">http://www.cmake.org/cmake/resources/software.html获</a> 取 最 新 的<br>cmake, 再编译.<br>编译 cmake 需要 QT4 和 java:<br>Q:Could NOT find Qt4 (missing: …<br>A:sudo apt-get install qt-sdk<br>Q:fatal error: ext2fs/ext2 fs.h: No such file or directory<br>A: sudo apt-get install e2fslibs-dev<br>Q:fatal error: curses.h: No such file or directory<br>A: sudo apt-get install libncurses5-dev</p>
+<h1 id="第二步下载源代码"><a href="#第二步下载源代码" class="headerlink" title="第二步下载源代码"></a>第二步下载源代码</h1><p>llvm所有的项目的代码的svn库都在:<br><a href="http://llvm.org/svn/llvm-project/" target="_blank" rel="noopener">http://llvm.org/svn/llvm-project/</a><br>可以使用svn拷贝<br><strong>1 下载llvm3.3</strong>$ svn co <a href="http://llvm.org/svn/llvm-project/llvm/branches/release_33/" target="_blank" rel="noopener">http://llvm.org/svn/llvm-project/llvm/branches/release_33/</a> llvm3.3<br><strong>2 下载clang3.3到llvk3.3/tools</strong>$ cd llvm3.3/tools/<br>$ svn co <a href="http://llvm.org/svn/llvm-project/cfe/branches/release_33/" target="_blank" rel="noopener">http://llvm.org/svn/llvm-project/cfe/branches/release_33/</a> clang</p>
+<p><strong>3 下载Compiler RT到llvm3.3/projects</strong>$ cd ../projects<br>$ svn co <a href="http://llvm.org/svn/llvm-project/compiler-rt/branches/release_33/" target="_blank" rel="noopener">http://llvm.org/svn/llvm-project/compiler-rt/branches/release_33/</a> compiler-rt</p>
+<h1 id="第三步-编译和安装"><a href="#第三步-编译和安装" class="headerlink" title="第三步 编译和安装"></a>第三步 编译和安装</h1><p><strong>1 建立build目录</strong>$ cd llvm3.3/<br>$ mkdir build<br><strong>2 产生ninja编译文件</strong>#可以使用-DCMAKE_INSTALL_PREFIX指定安装目录<br>$ cmake -G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_INSTALL_PREFIX=/opt/llvm3.3 ..</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmake -G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug -DLLVM_TARGETS_TO_BUILD=<span class="string">"X86"</span>  -DCMAKE_INSTALL_PREFIX=/opt/llvm3.4 ..</span><br></pre></td></tr></table></figure>
+<p>$ ln -s ../build/compile_commands.json ..</p>
+<p>（其中，compile_commands.json是根据 -DCMAKE_EXPORT_COMPILE_COMMANDS=ON 生成的，-DCMAKE_BUILD_TYPE=Debug 开启了Debug模式，更多参考<a href="https://llvm.org/docs/CMake.html）" target="_blank" rel="noopener">https://llvm.org/docs/CMake.html）</a></p>
+<p><strong>3 编译</strong></p>
+<p>$ ninja</p>
+<p><strong>4 安装</strong></p>
+<p>$ sudo ninja install</p>
+<p><strong>5 把安装目录加入的环境变量PATH中</strong></p>
+<p>可以在home目录的.bashrc中加入</p>
+<p>export PATH=/opt/llvm3.3/bin/:$PATH</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmake -G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug -DLLVM_TARGETS_TO_BUILD=&quot;X86&quot;  -DCMAKE_INSTALL_PREFIX=/opt/llvm3.4 ..</span><br></pre></td></tr></table></figure>
       
     </div>
+    
+    
+    
 
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/技术/" rel="tag"># 技术</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+          <div class="wp_rating">
+            <div id="wpac-rating"></div>
+          </div>
+        
+
+        
+
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/02/dynamicreliabilityanalysis/" rel="next" title="面向SEU的程序可靠性分析技术（PIN、DDG、LLVM）">
+                <i class="fa fa-chevron-left"></i> 面向SEU的程序可靠性分析技术（PIN、DDG、LLVM）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
           
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
 
         </div>
         
@@ -439,8 +588,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -539,6 +697,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第一步-安装ninja和cmake"><span class="nav-number">1.</span> <span class="nav-text">第一步 安装ninja和cmake</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第二步下载源代码"><span class="nav-number">2.</span> <span class="nav-text">第二步下载源代码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第三步-编译和安装"><span class="nav-number">3.</span> <span class="nav-text">第三步 编译和安装</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -706,6 +880,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.3"></script>
+
+
 
   
 
@@ -720,6 +898,23 @@
     <script id="dsq-count-scr" src="https://xiaofengwo.disqus.com/count.js" async></script>
   
 
+  
+    <script type="text/javascript">
+      var disqus_config = function () {
+        this.page.url = 'http://xiaofengwo.github.io/2018/06/16/build-llvm-with-ninja/';
+        this.page.identifier = '2018/06/16/build-llvm-with-ninja/';
+        this.page.title = '使用Ninja编译llvm';
+      };
+      function loadComments () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://xiaofengwo.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      }
+      
+        loadComments();
+      
+    </script>
   
 
 
@@ -1233,6 +1428,23 @@
 
   
   
+  <script type="text/javascript">
+  wpac_init = window.wpac_init || [];
+  wpac_init.push({widget: 'Rating', id: 9394,
+    el: 'wpac-rating',
+    color: 'fc6423'
+  });
+  (function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = '//embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+  })();
+  </script>
+
 
   
 
